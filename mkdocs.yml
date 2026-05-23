@@ -1,0 +1,83 @@
+site_name: acdi
+site_description: Automated Cryptography Discovery & Inventory for PQC migration
+site_url: https://vral-parmar.github.io/acdi
+repo_url: https://github.com/vral-parmar/acdi
+repo_name: vral-parmar/acdi
+edit_uri: edit/master/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: installation.md
+    - Quick Start: quickstart.md
+  - Commands:
+    - acdi scan: commands/scan.md
+    - acdi tls: commands/tls.md
+    - acdi diff: commands/diff.md
+  - Output Formats:
+    - CycloneDX 1.7 CBOM: formats/cbom.md
+    - SARIF 2.1.0: formats/sarif.md
+    - HTML Report: formats/html.md
+  - Reference:
+    - .acdignore: reference/acdignore.md
+    - Risk Model: reference/risk-model.md
+    - Supported Algorithms: reference/algorithms.md
+  - Guides:
+    - CI/CD Integration: guides/ci-cd.md
+    - GitHub Advanced Security: guides/github-security.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vral-parmar/acdi
+  version:
+    provider: mike

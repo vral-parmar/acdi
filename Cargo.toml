@@ -2,7 +2,7 @@
 name = "acdi"
 version = "0.5.0"
 edition = "2021"
-rust-version = "1.82"
+rust-version = "1.85"
 license = "MIT"
 description = "Automated Cryptography Discovery & Inventory for PQC migration"
 keywords = ["cryptography", "pqc", "cbom", "security", "cyclonedx"]

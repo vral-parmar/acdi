@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://vral-parmar.github.io/acdi/commands/tls/">
+        <link rel="canonical" href="https://vral-parmar.github.io/acdi/guides/terraform/">
       
       
-        <link rel="prev" href="../scan/">
+        <link rel="prev" href="../github-security/">
       
       
-        <link rel="next" href="../diff/">
+        <link rel="next" href="../../contributing/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>acdi tls - acdi</title>
+        <title>Terraform & Kubernetes - acdi</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#acdi-tls" class="md-skip">
+        <a href="#terraform-kubernetes-scanning" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              acdi tls
+              Terraform & Kubernetes
             
           </span>
         </div>
@@ -262,13 +262,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../scan/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../commands/scan/" class="md-tabs__link">
           
   
   
@@ -324,11 +322,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../guides/ci-cd/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ci-cd/" class="md-tabs__link">
           
   
   
@@ -577,31 +577,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -619,7 +616,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -637,7 +634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scan/" class="md-nav__link">
+      <a href="../../commands/scan/" class="md-nav__link">
         
   
   
@@ -662,37 +659,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    acdi tls
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../commands/tls/" class="md-nav__link">
         
   
   
@@ -708,142 +678,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#synopsis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synopsis
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arguments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#probe-a-single-endpoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Probe a single endpoint
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#probe-multiple-endpoints-from-a-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Probe multiple endpoints from a file
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#endpointstxt-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        endpoints.txt format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#high-concurrency-bulk-scan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High-concurrency bulk scan
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -856,7 +690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../diff/" class="md-nav__link">
+      <a href="../../commands/diff/" class="md-nav__link">
         
   
   
@@ -1206,28 +1040,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -1245,7 +1082,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1263,7 +1100,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/ci-cd/" class="md-nav__link">
+      <a href="../ci-cd/" class="md-nav__link">
         
   
   
@@ -1291,7 +1128,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/github-security/" class="md-nav__link">
+      <a href="../github-security/" class="md-nav__link">
         
   
   
@@ -1316,10 +1153,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../guides/terraform/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform & Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1335,6 +1199,170 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-hcl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform HCL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Terraform HCL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-detected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-tls-private-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example — TLS private key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-aws-kms-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example — AWS KMS key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-gcp-kms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example — GCP KMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-cert-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes cert-manager
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes cert-manager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-detected_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-scan_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suppress-known-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suppress known findings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1428,55 +1456,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#synopsis" class="md-nav__link">
+  <a href="#terraform-hcl" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synopsis
+        Terraform HCL
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arguments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Examples">
+    <nav class="md-nav" aria-label="Terraform HCL">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#probe-a-single-endpoint" class="md-nav__link">
+  <a href="#what-is-detected" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Probe a single endpoint
+        What is detected
       
     </span>
   </a>
@@ -1484,10 +1479,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#probe-multiple-endpoints-from-a-file" class="md-nav__link">
+  <a href="#example-tls-private-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Probe multiple endpoints from a file
+        Example — TLS private key
       
     </span>
   </a>
@@ -1495,10 +1490,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#endpointstxt-format" class="md-nav__link">
+  <a href="#example-aws-kms-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        endpoints.txt format
+        Example — AWS KMS key
       
     </span>
   </a>
@@ -1506,10 +1501,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#high-concurrency-bulk-scan" class="md-nav__link">
+  <a href="#example-gcp-kms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        High-concurrency bulk scan
+        Example — GCP KMS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a scan
       
     </span>
   </a>
@@ -1522,10 +1528,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
+  <a href="#kubernetes-cert-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output
+        Kubernetes cert-manager
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes cert-manager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-detected_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-scan_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suppress-known-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suppress known findings
       
     </span>
   </a>
@@ -1533,10 +1589,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#cicd-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        CI/CD integration
       
     </span>
   </a>
@@ -1563,93 +1619,150 @@
   
 
 
-<h1 id="acdi-tls">acdi tls<a class="headerlink" href="#acdi-tls" title="Permanent link">&para;</a></h1>
-<p>Probe one or more TLS endpoints and inventory the negotiated cipher suite and certificate chain.</p>
-<h2 id="synopsis">Synopsis<a class="headerlink" href="#synopsis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>acdi tls [TARGET] [OPTIONS]
-</code></pre></div>
-<h2 id="arguments">Arguments<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h2>
+<h1 id="terraform-kubernetes-scanning">Terraform &amp; Kubernetes Scanning<a class="headerlink" href="#terraform-kubernetes-scanning" title="Permanent link">&para;</a></h1>
+<p><code>acdi</code> v0.5.0 extends config scanning to Terraform HCL (<code>.tf</code>) and Kubernetes cert-manager manifests (<code>.yaml</code>/<code>.yml</code>), so infrastructure-as-code crypto choices are inventoried alongside application code.</p>
+<hr />
+<h2 id="terraform-hcl">Terraform HCL<a class="headerlink" href="#terraform-hcl" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-detected">What is detected<a class="headerlink" href="#what-is-detected" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Argument</th>
-<th>Description</th>
+<th>Attribute</th>
+<th>Values detected</th>
+<th>Resolved algorithm</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>[TARGET]</code></td>
-<td>Single <code>host:port</code> to probe (e.g. <code>api.example.com:443</code>). Omit when using <code>--hosts</code>.</td>
+<td><code>algorithm</code></td>
+<td><code>"RSA"</code>, <code>"ECDSA"</code></td>
+<td>RSA-2048, ECDSA-P-256</td>
+</tr>
+<tr>
+<td><code>rsa_bits</code></td>
+<td><code>2048</code>, <code>3072</code>, <code>4096</code></td>
+<td>RSA-2048, RSA-3072, RSA-4096</td>
+</tr>
+<tr>
+<td><code>ecdsa_curve</code></td>
+<td><code>"P256"</code>, <code>"P384"</code>, <code>"P521"</code></td>
+<td>ECDSA-P-256, ECDSA-P-384, ECDSA-P-521</td>
+</tr>
+<tr>
+<td><code>customer_master_key_spec</code></td>
+<td><code>"RSA_2048"</code>, <code>"ECC_NIST_P256"</code>, <code>"SYMMETRIC_DEFAULT"</code>, …</td>
+<td>RSA-2048, ECDSA-P-256, AES-256</td>
+</tr>
+<tr>
+<td><code>key_algorithm</code></td>
+<td><code>"RSA_SIGN_PKCS1_2048_SHA256"</code>, <code>"EC_SIGN_P256_SHA256"</code>, …</td>
+<td>RSA-2048, ECDSA-P-256</td>
 </tr>
 </tbody>
 </table>
-<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<h3 id="example-tls-private-key">Example — TLS private key<a class="headerlink" href="#example-tls-private-key" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;tls_private_key&quot;</span><span class="w"> </span><span class="nv">&quot;server&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="na">algorithm</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RSA&quot;</span><span class="c1">     # → detected: RSA-2048</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">rsa_bits</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">2048</span><span class="c1">      # → detected: RSA-2048</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;tls_private_key&quot;</span><span class="w"> </span><span class="nv">&quot;ecdsa&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="na">algorithm</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ECDSA&quot;</span><span class="c1">   # → detected: ECDSA-P-256</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="na">ecdsa_curve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P256&quot;</span><span class="c1">    # → detected: ECDSA-P-256</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="example-aws-kms-key">Example — AWS KMS key<a class="headerlink" href="#example-aws-kms-key" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_kms_key&quot;</span><span class="w"> </span><span class="nv">&quot;signing&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="na">description</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Signing key&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="na">customer_master_key_spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RSA_2048&quot;</span><span class="c1">   # → detected: RSA-2048</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="na">key_usage</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SIGN_VERIFY&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_kms_key&quot;</span><span class="w"> </span><span class="nv">&quot;aes&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="na">customer_master_key_spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SYMMETRIC_DEFAULT&quot;</span><span class="c1">  # → detected: AES-256</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="example-gcp-kms">Example — GCP KMS<a class="headerlink" href="#example-gcp-kms" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;google_kms_crypto_key&quot;</span><span class="w"> </span><span class="nv">&quot;ec_key&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-ec-key&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="na">key_ring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">google_kms_key_ring.keyring.id</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nb">version_template</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="na">algorithm</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;EC_SIGN_P256_SHA256&quot;</span><span class="c1">  # → detected: ECDSA-P-256</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="na">protection_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HSM&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="run-a-scan">Run a scan<a class="headerlink" href="#run-a-scan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Scan a Terraform project directory</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>acdi<span class="w"> </span>scan<span class="w"> </span>./infrastructure
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Gate the pipeline: fail if any CRITICAL finding (RSA &lt; 4096, ECDSA, …)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>acdi<span class="w"> </span>scan<span class="w"> </span>./infrastructure<span class="w"> </span>--fail-on<span class="w"> </span>critical<span class="w"> </span>--quiet<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Generate a migration report</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>acdi<span class="w"> </span>scan<span class="w"> </span>./infrastructure<span class="w"> </span>--format<span class="w"> </span>html<span class="w"> </span>--output<span class="w"> </span>infra-crypto.html
+</code></pre></div>
+<hr />
+<h2 id="kubernetes-cert-manager">Kubernetes cert-manager<a class="headerlink" href="#kubernetes-cert-manager" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-detected_1">What is detected<a class="headerlink" href="#what-is-detected_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Flag</th>
-<th>Default</th>
-<th>Description</th>
+<th>Field</th>
+<th>Values</th>
+<th>Resolved algorithm</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>--hosts &lt;FILE&gt;</code></td>
-<td>—</td>
-<td>File with one <code>host:port</code> per line. <code>#</code> lines are comments.</td>
+<td><code>curve</code></td>
+<td><code>P256</code>, <code>P384</code>, <code>P521</code></td>
+<td>ECDSA-P-256, ECDSA-P-384, ECDSA-P-521</td>
 </tr>
 <tr>
-<td><code>-o, --output &lt;FILE&gt;</code></td>
-<td>—</td>
-<td>Write CBOM JSON to this file.</td>
-</tr>
-<tr>
-<td><code>--concurrency &lt;N&gt;</code></td>
-<td><code>50</code></td>
-<td>Maximum concurrent TLS connections.</td>
-</tr>
-<tr>
-<td><code>--timeout &lt;SECS&gt;</code></td>
-<td><code>10</code></td>
-<td>Per-host timeout in seconds.</td>
+<td><code>algorithm</code> (generic)</td>
+<td><code>RSA</code>, <code>ECDSA</code></td>
+<td>RSA-2048, ECDSA-P-256</td>
 </tr>
 </tbody>
 </table>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cert-manager.io/v1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Certificate</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-cert</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-tls</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nt">privateKey</span><span class="p">:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ECDSA</span><span class="w">   </span><span class="c1"># → detected: ECDSA-P-256</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nt">curve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">P256</span><span class="w">        </span><span class="c1"># → detected: ECDSA-P-256</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nt">dnsNames</span><span class="p">:</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nt">issuerRef</span><span class="p">:</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIssuer</span>
+</code></pre></div>
+<h3 id="run-a-scan_1">Run a scan<a class="headerlink" href="#run-a-scan_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Scan a Kubernetes manifests directory</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>acdi<span class="w"> </span>scan<span class="w"> </span>./k8s/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Include subdirectories (default — acdi walks recursively)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>acdi<span class="w"> </span>scan<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>sarif<span class="w"> </span>--output<span class="w"> </span>k8s-crypto.sarif
+</code></pre></div>
 <hr />
-<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<h3 id="probe-a-single-endpoint">Probe a single endpoint<a class="headerlink" href="#probe-a-single-endpoint" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>api.example.com:443
+<h2 id="suppress-known-findings">Suppress known findings<a class="headerlink" href="#suppress-known-findings" title="Permanent link">&para;</a></h2>
+<p>Use <code>.acdignore</code> to suppress noise from intentional legacy entries:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># .acdignore
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a># Suppress RSA-2048 findings in the legacy module only
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>algorithm: RSA-2048
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>path: legacy/**
 </code></pre></div>
-<h3 id="probe-multiple-endpoints-from-a-file">Probe multiple endpoints from a file<a class="headerlink" href="#probe-multiple-endpoints-from-a-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>--hosts<span class="w"> </span>endpoints.txt<span class="w"> </span>--output<span class="w"> </span>tls-cbom.json
-</code></pre></div>
-<h3 id="endpointstxt-format">endpoints.txt format<a class="headerlink" href="#endpointstxt-format" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Production APIs
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>api.example.com:443
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>auth.example.com:443
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a># Internal services
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>db.internal:5432
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># cache.internal:6380  ← commented out
-</code></pre></div>
-<h3 id="high-concurrency-bulk-scan">High-concurrency bulk scan<a class="headerlink" href="#high-concurrency-bulk-scan" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>--hosts<span class="w"> </span>all-hosts.txt<span class="w"> </span>--concurrency<span class="w"> </span><span class="m">100</span><span class="w"> </span>--timeout<span class="w"> </span><span class="m">5</span><span class="w"> </span>--output<span class="w"> </span>tls-cbom.json
-</code></pre></div>
+<p>See <a href="../../reference/acdignore/"><code>.acdignore</code> reference</a> for full syntax.</p>
 <hr />
-<h2 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h2>
-<p><code>acdi tls</code> emits a CycloneDX 1.7 CBOM with:</p>
-<ul>
-<li><strong>Negotiated cipher suite</strong> — the algorithm family (e.g. <code>ECDHE-RSA-AES256-GCM-SHA384</code> → RSA key exchange)</li>
-<li><strong>Certificate chain</strong> — each certificate in the chain as a <code>certificate</code> asset with key algorithm, key size, and OID</li>
-</ul>
-<p>Unreachable hosts produce a <code>tracing::warn</code> log entry and are skipped — the command exits <code>0</code> as long as at least one host was reachable.</p>
-<hr />
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>acdi tls</code> validates hostnames against an allow-list of safe characters before opening any connection. Hostnames containing shell metacharacters are rejected.</li>
-<li>IPv6 addresses are supported: <code>[::1]:443</code>.</li>
-<li>TLS 1.2 and TLS 1.3 are both supported.</li>
-</ul>
+<h2 id="cicd-integration">CI/CD integration<a class="headerlink" href="#cicd-integration" title="Permanent link">&para;</a></h2>
+<p>Terraform and Kubernetes files are picked up automatically — no extra flags needed.
+See <a href="../ci-cd/">CI/CD Integration</a> for complete pipeline examples.</p>
 
 
 

@@ -580,10 +580,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pre-built-binaries-recommended" class="md-nav__link">
+  <a href="#homebrew-macos-linux-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-built binaries (recommended)
+        Homebrew (macOS / Linux) — recommended
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Action
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-built-binaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-built binaries
       
     </span>
   </a>
@@ -1251,6 +1284,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/terraform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform & Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1339,10 +1400,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pre-built-binaries-recommended" class="md-nav__link">
+  <a href="#homebrew-macos-linux-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-built binaries (recommended)
+        Homebrew (macOS / Linux) — recommended
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Action
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-built-binaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-built binaries
       
     </span>
   </a>
@@ -1414,49 +1508,80 @@
 
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<p><code>acdi</code> is distributed as a single statically-linked binary — no runtime, no Docker, no Java.</p>
+<p><code>acdi</code> ships as a single statically-linked binary. Pick the method that fits your workflow.</p>
 <hr />
-<h2 id="pre-built-binaries-recommended">Pre-built binaries (recommended)<a class="headerlink" href="#pre-built-binaries-recommended" title="Permanent link">&para;</a></h2>
+<h2 id="homebrew-macos-linux-recommended">Homebrew (macOS / Linux) — recommended<a class="headerlink" href="#homebrew-macos-linux-recommended" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>tap<span class="w"> </span>vral-parmar/tap
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>brew<span class="w"> </span>install<span class="w"> </span>acdi
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>acdi<span class="w"> </span>--version
+</code></pre></div>
+<p>The tap is automatically updated on every release.</p>
+<hr />
+<h2 id="docker">Docker<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Scan the current directory — mounts it as /src inside the container</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>:/src<span class="w"> </span>ghcr.io/vral-parmar/acdi<span class="w"> </span>scan<span class="w"> </span>/src
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate an HTML report</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>:/src<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>ghcr.io/vral-parmar/acdi<span class="w"> </span>scan<span class="w"> </span>/src<span class="w"> </span>--format<span class="w"> </span>html<span class="w"> </span>--output<span class="w"> </span>/src/report.html<span class="w"> </span>--quiet
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Pin a specific version</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>:/src<span class="w"> </span>ghcr.io/vral-parmar/acdi:0.5.0<span class="w"> </span>scan<span class="w"> </span>/src
+</code></pre></div>
+<hr />
+<h2 id="github-action">GitHub Action<a class="headerlink" href="#github-action" title="Permanent link">&para;</a></h2>
+<p>Add to any GitHub Actions workflow:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vral-parmar/acdi@v0.5.0</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;scan</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">--format</span><span class="nv"> </span><span class="s">sarif</span><span class="nv"> </span><span class="s">--output</span><span class="nv"> </span><span class="s">acdi.sarif</span><span class="nv"> </span><span class="s">--quiet&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github/codeql-action/upload-sarif@v3</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">sarif_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">acdi.sarif</span>
+</code></pre></div>
+<p>See <a href="../guides/ci-cd/">CI/CD Integration</a> for complete examples.</p>
+<hr />
+<h2 id="pre-built-binaries">Pre-built binaries<a class="headerlink" href="#pre-built-binaries" title="Permanent link">&para;</a></h2>
 <p>Download the latest release from the <a href="https://github.com/vral-parmar/acdi/releases">GitHub Releases</a> page.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">macOS (Apple Silicon)</label><label for="__tabbed_1_2">macOS (Intel)</label><label for="__tabbed_1_3">Linux (x86_64)</label><label for="__tabbed_1_4">Linux (ARM64)</label><label for="__tabbed_1_5">Windows (x86_64)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-aarch64-apple-darwin
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>acdi
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>acdi<span class="w"> </span>/usr/local/bin/
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>acdi<span class="w"> </span>--version
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-apple-darwin
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>acdi
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>acdi<span class="w"> </span>/usr/local/bin/
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>acdi<span class="w"> </span>--version
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>Statically linked against musl — runs on any Linux distribution without glibc version constraints.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>acdi
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>acdi<span class="w"> </span>/usr/local/bin/
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>acdi<span class="w"> </span>--version
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-aarch64-unknown-linux-musl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-aarch64-apple-darwin
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>acdi
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>acdi<span class="w"> </span>/usr/local/bin/
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>acdi<span class="w"> </span>--version
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Invoke-WebRequest</span> <span class="p">`</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  <span class="n">-Uri</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">vral-parmar</span><span class="p">/</span><span class="n">acdi</span><span class="p">/</span><span class="n">releases</span><span class="p">/</span><span class="n">latest</span><span class="p">/</span><span class="n">download</span><span class="p">/</span><span class="n">acdi-x86_64-pc-windows-msvc</span><span class="p">.</span><span class="n">exe</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="n">-OutFile</span> <span class="n">acdi</span><span class="p">.</span><span class="n">exe</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Add to PATH or move to a directory already in PATH</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Move-Item</span> <span class="n">acdi</span><span class="p">.</span><span class="n">exe</span> <span class="n">C</span><span class="p">:\</span><span class="n">Windows</span><span class="p">\</span><span class="n">System32</span><span class="p">\</span><span class="n">acdi</span><span class="p">.</span><span class="n">exe</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">acdi</span> <span class="p">-</span><span class="n">-version</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-apple-darwin
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>acdi
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>acdi<span class="w"> </span>/usr/local/bin/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>acdi<span class="w"> </span>--version
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Statically linked against musl — runs on any Linux distribution without glibc version constraints.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>acdi
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>acdi<span class="w"> </span>/usr/local/bin/
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>acdi<span class="w"> </span>--version
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>acdi<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/acdi-aarch64-unknown-linux-musl
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>acdi
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>sudo<span class="w"> </span>mv<span class="w"> </span>acdi<span class="w"> </span>/usr/local/bin/
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>acdi<span class="w"> </span>--version
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Invoke-WebRequest</span> <span class="p">`</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="n">-Uri</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">vral-parmar</span><span class="p">/</span><span class="n">acdi</span><span class="p">/</span><span class="n">releases</span><span class="p">/</span><span class="n">latest</span><span class="p">/</span><span class="n">download</span><span class="p">/</span><span class="n">acdi-x86_64-pc-windows-msvc</span><span class="p">.</span><span class="n">exe</span> <span class="p">`</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="n">-OutFile</span> <span class="n">acdi</span><span class="p">.</span><span class="n">exe</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Add to PATH or move to a directory already in PATH</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Move-Item</span> <span class="n">acdi</span><span class="p">.</span><span class="n">exe</span> <span class="n">C</span><span class="p">:\</span><span class="n">Windows</span><span class="p">\</span><span class="n">System32</span><span class="p">\</span><span class="n">acdi</span><span class="p">.</span><span class="n">exe</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">acdi</span> <span class="p">-</span><span class="n">-version</span>
 </code></pre></div>
 </div>
 </div>
@@ -1464,20 +1589,20 @@
 <hr />
 <h2 id="verify-checksums">Verify checksums<a class="headerlink" href="#verify-checksums" title="Permanent link">&para;</a></h2>
 <p>Each release includes a <code>SHA256SUMS.txt</code> file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>SHA256SUMS<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/SHA256SUMS.txt
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sha256sum<span class="w"> </span>-c<span class="w"> </span>SHA256SUMS<span class="w"> </span>--ignore-missing
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-Lo<span class="w"> </span>SHA256SUMS<span class="w"> </span>https://github.com/vral-parmar/acdi/releases/latest/download/SHA256SUMS.txt
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sha256sum<span class="w"> </span>-c<span class="w"> </span>SHA256SUMS<span class="w"> </span>--ignore-missing
 </code></pre></div>
 <hr />
 <h2 id="cargo-install">Cargo install<a class="headerlink" href="#cargo-install" title="Permanent link">&para;</a></h2>
 <p>Requires Rust 1.75+ (install via <a href="https://rustup.rs">rustup</a>).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cargo<span class="w"> </span>install<span class="w"> </span>acdi
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>cargo<span class="w"> </span>install<span class="w"> </span>acdi
 </code></pre></div>
 <hr />
 <h2 id="build-from-source">Build from source<a class="headerlink" href="#build-from-source" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/vral-parmar/acdi
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">cd</span><span class="w"> </span>acdi
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cargo<span class="w"> </span>build<span class="w"> </span>--release
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>./target/release/acdi<span class="w"> </span>--version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/vral-parmar/acdi
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>acdi
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>cargo<span class="w"> </span>build<span class="w"> </span>--release
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>./target/release/acdi<span class="w"> </span>--version
 </code></pre></div>
 <p>The release profile produces a stripped, LTO-optimised binary (~3–5 MB).</p>
 <hr />

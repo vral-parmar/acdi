@@ -1,6 +1,6 @@
 # acdi — Automated Cryptography Discovery & Inventory
 
-**Find every quantum-vulnerable algorithm in your codebase, certificates, and TLS endpoints — in seconds.**
+**Find every quantum-vulnerable algorithm in your codebase, certificates, and TLS endpoints in seconds.**
 
 `acdi` is a single-binary CLI that scans filesystems, source code, package manifests, config files, PEM/DER certificates, compiled binaries, and live TLS endpoints for cryptographic assets. It emits a [CycloneDX 1.7 CBOM](https://cyclonedx.org/capabilities/cbom/), SARIF 2.1, or an interactive HTML migration report — ready for your PQC migration programme.
 
@@ -34,17 +34,17 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 
 | Capability | Details |
 |---|---|
-| **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size, curve, OID |
-| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS — OpenSSL, JCA, hashlib, crypto/... |
+| **Certificate scanning** | PEM & DER RSA, ECDSA, Ed25519; key size, curve, OID |
+| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS OpenSSL, JCA, hashlib, crypto/... |
 | **Binary scanning** | String extraction — finds algorithm names and OIDs in compiled binaries |
-| **Config file scanning** | YAML, TOML, JSON, .env, .ini — JWT `alg` fields, TLS cipher suites, SSH key types |
+| **Config file scanning** | YAML, TOML, JSON, .env, .ini JWT `alg` fields, TLS cipher suites, SSH key types |
 | **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, Pipfile — maps libraries to algorithms |
 | **TLS endpoint probing** | Live handshake — negotiated cipher suite, certificate chain |
 | **CBOM output** | CycloneDX 1.7 with `cryptoProperties`, `assetType`, `algorithmProperties` |
 | **SARIF output** | Import directly into GitHub Advanced Security, VS Code, or any SAST platform |
 | **HTML report** | Self-contained interactive report with NIST timeline, sortable findings, remediation guide |
-| **`.acdignore`** | Suppress known-acceptable findings — by algorithm, file path glob, or evidence type |
-| **CBOM diff** | Compare two CBOMs — see what changed between scans |
+| **`.acdignore`** | Suppress known-acceptable findings by algorithm, file path glob, or evidence type |
+| **CBOM diff** | Compare two CBOMs see what changed between scans |
 | **Risk scoring** | CRITICAL / HIGH / MEDIUM / LOW / NONE based on HNDL threat and NIST IR 8547 |
 
 ---
@@ -53,23 +53,23 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 
 ### Pre-built binaries (recommended)
 
-Download the latest release from the [GitHub Releases](../../releases) page. Statically linked — no runtime dependencies.
+Download the latest release from the [GitHub Releases](../../releases) page. Statically linked no runtime dependencies.
 
 ```bash
 # macOS (Apple Silicon)
-curl -Lo acdi https://github.com/YOUR_USERNAME/acdi/releases/latest/download/acdi-aarch64-apple-darwin
+curl -Lo acdi https://github.com/vral-parmar/acdi/releases/latest/download/acdi-aarch64-apple-darwin
 chmod +x acdi && sudo mv acdi /usr/local/bin/
 
 # macOS (Intel)
-curl -Lo acdi https://github.com/YOUR_USERNAME/acdi/releases/latest/download/acdi-x86_64-apple-darwin
+curl -Lo acdi https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-apple-darwin
 chmod +x acdi && sudo mv acdi /usr/local/bin/
 
 # Linux (x86_64, static musl)
-curl -Lo acdi https://github.com/YOUR_USERNAME/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
+curl -Lo acdi https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
 chmod +x acdi && sudo mv acdi /usr/local/bin/
 
 # Windows (PowerShell)
-Invoke-WebRequest -Uri https://github.com/YOUR_USERNAME/acdi/releases/latest/download/acdi-x86_64-pc-windows-msvc.exe -OutFile acdi.exe
+Invoke-WebRequest -Uri https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-pc-windows-msvc.exe -OutFile acdi.exe
 ```
 
 ### Build from source
@@ -77,7 +77,7 @@ Invoke-WebRequest -Uri https://github.com/YOUR_USERNAME/acdi/releases/latest/dow
 Requires Rust 1.75+ (`rustup` recommended).
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/acdi
+git clone https://github.com/vral-parmar/acdi
 cd acdi
 cargo build --release
 # Binary at: ./target/release/acdi
@@ -382,7 +382,7 @@ jobs:
 
       - name: Download acdi
         run: |
-          curl -Lo acdi https://github.com/YOUR_USERNAME/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
+          curl -Lo acdi https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
           chmod +x acdi
 
       - name: Scan for vulnerable cryptography
@@ -404,7 +404,7 @@ jobs:
 acdi-scan:
   stage: security
   script:
-    - curl -Lo acdi https://github.com/YOUR_USERNAME/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
+    - curl -Lo acdi https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
     - chmod +x acdi
     - ./acdi scan . --format sarif --output gl-sast-report.json --quiet
   artifacts:

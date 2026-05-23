@@ -7,6 +7,45 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.0] — 2026-05-23
+
+### Added
+- **Kotlin source patterns**: Android Keystore `KeyProperties.KEY_ALGORITHM_RSA/EC/AES`, `KeyProperties.DIGEST_*` constants, `SecretKeySpec("HmacSHA256")`. All existing JCA patterns (shared with Java) already covered `.kt`/`.kts` files.
+- **C# / .NET source patterns** (new extension `.cs`): `RSA.Create(N)`, `new RSACryptoServiceProvider(N)`, `new RSACng(N)`, `ECDsa.Create(ECCurve.NamedCurves.nistP256/P384/P521)`, `new ECDsaCng(256/384/521)`, `Aes.Create()`, `new AesManaged/AesCsp`, `TripleDES.Create()`, `SHA1/SHA256/SHA384/SHA512.Create()`, `new HMACSHA1/SHA256/SHA384/SHA512/MD5()`.
+- **Terraform HCL scanning** (new extension `.tf`): detects `algorithm = "RSA"/"ECDSA"`, `rsa_bits = 2048`, `ecdsa_curve = "P256"`, AWS KMS `customer_master_key_spec` (`RSA_2048`, `ECC_NIST_P256`, `SYMMETRIC_DEFAULT`), GCP KMS `algorithm` values (`EC_SIGN_P256_SHA256`, etc.).
+- **Kubernetes cert-manager patterns**: `curve: P256/P384/P521` in YAML (`.yaml`/`.yml`) files.
+- **Homebrew formula**: `brew tap vral-parmar/tap && brew install acdi`.
+- **Docker image** (`ghcr.io/vral-parmar/acdi`): run without installing anything — `docker run --rm -v "$(pwd)":/src ghcr.io/vral-parmar/acdi scan /src`.
+- **GitHub composite Action** (`vral-parmar/acdi@v0.5.0`): one-step integration for any GitHub Actions workflow.
+- 23 new integration tests (130 total).
+
+### Changed
+- `SOURCE_EXTENSIONS`: added `cs` (C# / .NET).
+- `CONFIG_EXTENSIONS`: added `tf` (Terraform HCL).
+- `normalize_ec_curve`: added `"256" | "384" | "521"` mappings for C# `ECDsaCng(256)` style key sizes.
+
+---
+
+## [0.4.0] — 2026-05-23
+
+### Added
+- **Maven pom.xml scanning**: detects crypto libraries (BouncyCastle, java-jwt, nimbus-jose-jwt, JJWT, Spring Security Crypto, Tink, etc.) via a state-machine XML parser that extracts `<groupId>:<artifactId>` pairs.
+- **Gradle build.gradle / build.gradle.kts scanning**: detects the same Java crypto library catalog via quoted `group:artifact:version` GAV string matching.
+- **Ruby source patterns**: OpenSSL RSA/EC key generation, OpenSSL Digest (SHA-1, SHA-256, MD5), OpenSSL Cipher AES, JWT.encode/decode with algorithm string normalization.
+- **PHP source patterns**: `openssl_pkey_new`, `openssl_encrypt` (AES-128-CBC/AES-256-GCM/3DES), `hash()` with named algorithm, `md5()`, `sha1()`, `openssl_sign`.
+- **Swift source patterns**: CryptoKit P-256/P-384/P-521 signing/key-agreement, SHA256/SHA384/SHA512 hashing, `Insecure.SHA1`/`Insecure.MD5`, AES-GCM, Security framework RSA (`kSecAttrKeyTypeRSA`).
+- **CSV output format** (`--format csv`): RFC 4180 compliant, 8 columns — Algorithm, AssetType, QuantumSafety, HNDLRisk, NISTLevel, File, Line, Evidence.
+- JWT algorithm string normalization in source patterns: RS256/ES256/HS256 etc. → canonical algorithm names.
+
+### Changed
+- `--format` now accepts `cyclonedx-1.7 | sarif | html | csv`.
+- `diff --format json` now works correctly (was accepted but ignored in 0.3.0).
+
+### Fixed
+- `scan --quiet` output no longer emits a trailing blank line when piped to CSV or HTML formats.
+
+---
+
 ## [0.3.0] — 2026-05-23
 
 ### Added

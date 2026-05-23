@@ -27,7 +27,7 @@ acdi scan ./project --quiet > cbom.json
   "version": 1,
   "metadata": {
     "timestamp": "2026-05-23T16:42:12Z",
-    "tools": [{ "vendor": "acdi", "name": "acdi", "version": "0.3.0" }]
+    "tools": [{ "vendor": "acdi", "name": "acdi", "version": "0.5.0" }]
   },
   "components": [ ... ]
 }

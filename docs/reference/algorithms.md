@@ -2,6 +2,10 @@
 
 This page lists the cryptographic algorithms that `acdi` recognises and classifies.
 
+**Supported source languages**: C, C++, Go, Java, Kotlin, Python, Rust, JavaScript/TypeScript, Ruby, PHP, Swift, C# (.NET)
+
+**Supported config/IaC formats**: YAML, TOML, JSON, .env, .properties, .ini, .cfg, .conf, Terraform HCL (`.tf`), Kubernetes YAML
+
 ---
 
 ## Quantum-vulnerable (CRITICAL)
@@ -112,6 +116,18 @@ Libraries detected in package manifests are mapped to their primary algorithm:
 | `golang.org/x/crypto` | ECDH-P-256 |
 | `golang-jwt/jwt` | RSA-2048 |
 | `cloudflare/circl` | ML-KEM-768 |
+
+**Ruby (Gemfile / .rb source)**
+
+| Library | Primary algorithm |
+|---|---|
+| `openssl` (gem) | RSA-2048 |
+
+**PHP (composer.json / .php source)**
+
+| Library | Primary algorithm |
+|---|---|
+| `openssl` (ext) | RSA-2048 |
 
 **Java (pom.xml / build.gradle / build.gradle.kts)**
 

@@ -1,8 +1,8 @@
 # acdi — Automated Cryptography Discovery & Inventory
 
-[![Crates.io](https://img.shields.io/crates/v/acdi.svg)](https://crates.io/crates/acdi)
+[![Crates.io Version](https://img.shields.io/crates/v/acdi.svg)](https://crates.io/crates/acdi)
 [![Crates.io Downloads](https://img.shields.io/crates/d/acdi.svg)](https://crates.io/crates/acdi)
-[![docs.rs](https://docs.rs/acdi/badge.svg)](https://docs.rs/acdi)
+[![Documentation](https://img.shields.io/badge/docs-docs.rs-blue)](https://docs.rs/acdi)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Rust 1.75+](https://img.shields.io/badge/rust-1.75%2B-orange.svg)](https://www.rust-lang.org)
 

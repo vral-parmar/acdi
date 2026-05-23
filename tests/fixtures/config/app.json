@@ -1,0 +1,10 @@
+{
+  "jwt": {
+    "alg": "ES256",
+    "expiry": 3600
+  },
+  "crypto": {
+    "algorithm": "RSA-2048",
+    "hash_algorithm": "SHA-256"
+  }
+}

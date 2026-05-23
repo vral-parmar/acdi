@@ -1,0 +1,2 @@
+# .acdignore fixture — suppress RSA-4096 from pems directory
+algorithm:RSA-4096

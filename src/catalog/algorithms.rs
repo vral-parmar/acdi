@@ -1,0 +1,377 @@
+#![forbid(unsafe_code)]
+
+use crate::model::{Primitive, QuantumSafety, Risk};
+
+/// Static metadata for a known cryptographic algorithm.
+pub struct AlgorithmInfo {
+    pub name: &'static str,
+    pub primitive: Primitive,
+    pub quantum_safe: QuantumSafety,
+    /// NIST security level (0 = broken/deprecated, 1–5 = post-quantum levels).
+    /// Classical algorithms use equivalent bit-security mapped to NIST levels.
+    pub nist_quantum_security: u8,
+    pub hndl_risk: Risk,
+    /// Deprecated by NIST IR 8547 by 2030
+    pub deprecated_2030: bool,
+    /// Disallowed by NIST IR 8547 by 2035
+    pub disallowed_2035: bool,
+}
+
+/// Complete algorithm catalog sourced from NIST IR 8547, NSA CNSA 2.0, and FIPS standards.
+///
+/// NIST quantum security levels:
+///   0 = broken classically or known to be quantum-vulnerable with no mitigation
+///   1 = equivalent to AES-128 against quantum (Grover's) — 64-bit post-quantum security
+///   2 = equivalent to SHA-256 against quantum
+///   3 = equivalent to AES-192 against quantum
+///   4 = equivalent to SHA-384 against quantum
+///   5 = equivalent to AES-256 against quantum — 128-bit post-quantum security
+pub static ALGORITHM_CATALOG: &[AlgorithmInfo] = &[
+    // ── Post-quantum algorithms (NIST FIPS 203/204/205) ──────────────────────
+    AlgorithmInfo {
+        name: "ML-KEM-512",
+        primitive: Primitive::PostQuantumKem,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 1,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "ML-KEM-768",
+        primitive: Primitive::PostQuantumKem,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 3,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "ML-KEM-1024",
+        primitive: Primitive::PostQuantumKem,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 5,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "ML-DSA-44",
+        primitive: Primitive::PostQuantumSignature,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 2,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "ML-DSA-65",
+        primitive: Primitive::PostQuantumSignature,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 3,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "ML-DSA-87",
+        primitive: Primitive::PostQuantumSignature,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 5,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "SLH-DSA-SHA2-128s",
+        primitive: Primitive::PostQuantumSignature,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 1,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "SLH-DSA-SHAKE-256f",
+        primitive: Primitive::PostQuantumSignature,
+        quantum_safe: QuantumSafety::Safe,
+        nist_quantum_security: 5,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    // ── Classical asymmetric — VULNERABLE (Shor's algorithm) ─────────────────
+    AlgorithmInfo {
+        name: "RSA-1024",
+        primitive: Primitive::PublicKeyEncryption,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "RSA-2048",
+        primitive: Primitive::PublicKeyEncryption,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "RSA-3072",
+        primitive: Primitive::PublicKeyEncryption,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "RSA-4096",
+        primitive: Primitive::PublicKeyEncryption,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "DSA-1024",
+        primitive: Primitive::DigitalSignature,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "DSA-2048",
+        primitive: Primitive::DigitalSignature,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "ECDSA-P-256",
+        primitive: Primitive::DigitalSignature,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "ECDSA-P-384",
+        primitive: Primitive::DigitalSignature,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "ECDSA-P-521",
+        primitive: Primitive::DigitalSignature,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "ECDH-P-256",
+        primitive: Primitive::KeyAgreement,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "ECDH-P-384",
+        primitive: Primitive::KeyAgreement,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "X25519",
+        primitive: Primitive::KeyAgreement,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "Ed25519",
+        primitive: Primitive::DigitalSignature,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "DH-2048",
+        primitive: Primitive::KeyAgreement,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    // ── Symmetric — adequate with AES-256, marginal at AES-128 ───────────────
+    AlgorithmInfo {
+        name: "AES-256",
+        primitive: Primitive::BlockCipher,
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 5,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "AES-192",
+        primitive: Primitive::BlockCipher,
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 3,
+        hndl_risk: Risk::Low,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "AES-128",
+        primitive: Primitive::BlockCipher,
+        // Grover's reduces to ~64-bit security — marginal under CNSA 2.0
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 1,
+        hndl_risk: Risk::Medium,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "3DES",
+        primitive: Primitive::BlockCipher,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "DES",
+        primitive: Primitive::BlockCipher,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "RC4",
+        primitive: Primitive::StreamCipher,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "RC2",
+        primitive: Primitive::BlockCipher,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    // ── Hash functions ────────────────────────────────────────────────────────
+    AlgorithmInfo {
+        name: "SHA-512",
+        primitive: Primitive::Hash,
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 5,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "SHA-384",
+        primitive: Primitive::Hash,
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 4,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "SHA-256",
+        primitive: Primitive::Hash,
+        // Grover's reduces collision resistance to ~128-bit — adequate for now
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 2,
+        hndl_risk: Risk::Low,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "SHA3-256",
+        primitive: Primitive::Hash,
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 2,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "SHA3-512",
+        primitive: Primitive::Hash,
+        quantum_safe: QuantumSafety::ClassicallyAdequate,
+        nist_quantum_security: 5,
+        hndl_risk: Risk::None,
+        deprecated_2030: false,
+        disallowed_2035: false,
+    },
+    AlgorithmInfo {
+        name: "SHA-1",
+        primitive: Primitive::Hash,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Medium,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "MD5",
+        primitive: Primitive::Hash,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::High,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+    AlgorithmInfo {
+        name: "MD4",
+        primitive: Primitive::Hash,
+        quantum_safe: QuantumSafety::Vulnerable,
+        nist_quantum_security: 0,
+        hndl_risk: Risk::Critical,
+        deprecated_2030: true,
+        disallowed_2035: true,
+    },
+];
+
+/// Look up algorithm info by exact name (case-insensitive).
+pub fn lookup_by_name(name: &str) -> Option<&'static AlgorithmInfo> {
+    let lower = name.to_lowercase();
+    ALGORITHM_CATALOG
+        .iter()
+        .find(|a| a.name.to_lowercase() == lower)
+}

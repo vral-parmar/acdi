@@ -1,0 +1,12 @@
+# TOML config — fixture for acdi config scanner tests
+
+[jwt]
+algorithm = "RS256"
+expiry = 3600
+
+[tls]
+cipher_suite = "TLS_RSA_WITH_AES_256_CBC_SHA256"
+
+[crypto]
+encryption_algorithm = "AES-128"
+hash_algorithm = "SHA-256"

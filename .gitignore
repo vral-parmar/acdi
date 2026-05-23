@@ -1,0 +1,24 @@
+# Rust build artifacts
+/target/
+
+# Generated reports
+*.sarif
+*.html
+cbom*.json
+report*.json
+
+# Editor & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# graphify knowledge-graph outputs (local dev tool, not part of project)
+graphify-out/
+
+# Local Claude Code settings
+.claude/
+
+# acdi_build_plan.md is a local planning doc, not for the repo
+acdi_build_plan.md

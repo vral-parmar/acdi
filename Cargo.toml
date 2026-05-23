@@ -1,0 +1,77 @@
+[package]
+name = "acdi"
+version = "0.3.0"
+edition = "2021"
+license = "MIT"
+description = "Automated Cryptography Discovery & Inventory for PQC migration"
+keywords = ["cryptography", "pqc", "cbom", "security", "cyclonedx"]
+categories = ["command-line-utilities", "cryptography"]
+repository = "https://github.com/YOUR_USERNAME/acdi"
+homepage = "https://github.com/YOUR_USERNAME/acdi"
+readme = "README.md"
+
+[[bin]]
+name = "acdi"
+path = "src/main.rs"
+
+[lib]
+name = "acdi"
+path = "src/lib.rs"
+
+[dependencies]
+# CLI
+clap = { version = "4", features = ["derive", "env"] }
+
+# Async runtime
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "io-util", "time", "sync", "process"] }
+
+# TLS probing
+rustls = { version = "0.23", features = ["ring"] }
+tokio-rustls = "0.26"
+webpki-roots = "0.26"
+
+# X.509 / PEM / DER parsing
+x509-parser = "0.16"
+rustls-pemfile = "2"
+der = "0.7"
+rasn = "0.18"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Output / display
+comfy-table = "7"
+owo-colors = "4"
+indicatif = "0.17"
+
+# Error handling
+anyhow = "1"
+thiserror = "2"
+
+# File walking
+ignore = "0.4"
+
+# Parallel scanning
+rayon = "1"
+
+# Source code pattern matching
+regex = "1"
+
+# CBOM metadata
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+tempfile = "3"
+base64 = "0.22"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"

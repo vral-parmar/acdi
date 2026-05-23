@@ -1,0 +1,18 @@
+# Application configuration — fixture for acdi config scanner tests
+
+server:
+  tls:
+    cipher_suite: TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+    key_type: rsa
+
+jwt:
+  algorithm: RS256
+  expiry: 3600
+
+database:
+  encryption_algorithm: AES-256
+  hash_algorithm: SHA-1
+
+legacy:
+  signing_algorithm: MD5
+  cipher: 3DES

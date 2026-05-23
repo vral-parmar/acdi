@@ -856,6 +856,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formats/csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1659,6 +1687,20 @@
 </thead>
 <tbody>
 <tr>
+<td><strong>Rust (Cargo.toml)</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Primary algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td><code>openssl</code></td>
 <td>RSA-2048</td>
 </tr>
@@ -1702,6 +1744,17 @@
 <td><code>ml-kem</code></td>
 <td>ML-KEM-768</td>
 </tr>
+</tbody>
+</table>
+<p><strong>JavaScript / Node (package.json)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Primary algorithm</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>node-forge</code></td>
 <td>RSA-2048</td>
@@ -1714,8 +1767,19 @@
 <td><code>elliptic</code></td>
 <td>ECDSA-P-256</td>
 </tr>
+</tbody>
+</table>
+<p><strong>Python (requirements.txt / Pipfile)</strong></p>
+<table>
+<thead>
 <tr>
-<td><code>cryptography</code> (Python)</td>
+<th>Library</th>
+<th>Primary algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cryptography</code></td>
 <td>RSA-2048</td>
 </tr>
 <tr>
@@ -1726,6 +1790,17 @@
 <td><code>pycryptodome</code></td>
 <td>RSA-2048</td>
 </tr>
+</tbody>
+</table>
+<p><strong>Go (go.mod)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Primary algorithm</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>golang.org/x/crypto</code></td>
 <td>ECDH-P-256</td>
@@ -1740,7 +1815,58 @@
 </tr>
 </tbody>
 </table>
-<p>Full list: 55+ entries. See <code>src/detect/manifest.rs</code> in the source code.</p>
+<p><strong>Java (pom.xml / build.gradle / build.gradle.kts)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Primary algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcprov-jdk18on</code></td>
+<td>RSA-2048</td>
+</tr>
+<tr>
+<td><code>bcpkix-jdk18on</code></td>
+<td>RSA-2048</td>
+</tr>
+<tr>
+<td><code>java-jwt</code></td>
+<td>RSA-2048</td>
+</tr>
+<tr>
+<td><code>jjwt-api</code></td>
+<td>RSA-2048</td>
+</tr>
+<tr>
+<td><code>jjwt-impl</code></td>
+<td>RSA-2048</td>
+</tr>
+<tr>
+<td><code>nimbus-jose-jwt</code></td>
+<td>ECDSA-P-256</td>
+</tr>
+<tr>
+<td><code>spring-security-crypto</code></td>
+<td>RSA-2048</td>
+</tr>
+<tr>
+<td><code>tink</code></td>
+<td>AES-256</td>
+</tr>
+<tr>
+<td><code>conscrypt-openjdk-uber</code></td>
+<td>ECDSA-P-256</td>
+</tr>
+<tr>
+<td><code>google-cloud-kms</code></td>
+<td>RSA-2048</td>
+</tr>
+</tbody>
+</table>
+<p>Full list: 75+ entries. See <code>src/detect/manifest.rs</code> in the source code.</p>
 
 
 

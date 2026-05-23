@@ -46,6 +46,7 @@ nav:
     - CycloneDX 1.7 CBOM: formats/cbom.md
     - SARIF 2.1.0: formats/sarif.md
     - HTML Report: formats/html.md
+    - CSV: formats/csv.md
   - Reference:
     - .acdignore: reference/acdignore.md
     - Risk Model: reference/risk-model.md

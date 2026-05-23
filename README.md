@@ -41,14 +41,15 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 | Capability | Details |
 |---|---|
 | **Certificate scanning** | PEM & DER RSA, ECDSA, Ed25519; key size, curve, OID |
-| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS OpenSSL, JCA, hashlib, crypto/... |
+| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS, **Ruby, PHP, Swift** — OpenSSL, JCA, hashlib, CryptoKit, jwt… |
 | **Binary scanning** | String extraction — finds algorithm names and OIDs in compiled binaries |
 | **Config file scanning** | YAML, TOML, JSON, .env, .ini JWT `alg` fields, TLS cipher suites, SSH key types |
-| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, Pipfile — maps libraries to algorithms |
+| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, Pipfile, **pom.xml, build.gradle** — maps libraries to algorithms |
 | **TLS endpoint probing** | Live handshake — negotiated cipher suite, certificate chain |
 | **CBOM output** | CycloneDX 1.7 with `cryptoProperties`, `assetType`, `algorithmProperties` |
 | **SARIF output** | Import directly into GitHub Advanced Security, VS Code, or any SAST platform |
 | **HTML report** | Self-contained interactive report with NIST timeline, sortable findings, remediation guide |
+| **CSV output** | RFC 4180 CSV — pipe to Excel, pandas, or any analytics tool |
 | **`.acdignore`** | Suppress known-acceptable findings by algorithm, file path glob, or evidence type |
 | **CBOM diff** | Compare two CBOMs see what changed between scans |
 | **Risk scoring** | CRITICAL / HIGH / MEDIUM / LOW / NONE based on HNDL threat and NIST IR 8547 |
@@ -115,6 +116,9 @@ acdi scan ./my-project --format html --output report.html
 # Generate SARIF (for GitHub Advanced Security / VS Code)
 acdi scan ./my-project --format sarif --output results.sarif
 
+# Export CSV for spreadsheet / data analysis
+acdi scan ./my-project --format csv --quiet > findings.csv
+
 # Probe a live TLS endpoint
 acdi tls api.example.com:443
 
@@ -140,7 +144,7 @@ Arguments:
 Options:
   -o, --output <FILE>       Write output to file instead of stdout
       --format <FORMAT>     Output format [default: cyclonedx-1.7]
-                            Values: cyclonedx-1.7 | sarif | html
+                            Values: cyclonedx-1.7 | sarif | html | csv
       --fail-on <LEVEL>     Exit 1 if any finding meets or exceeds this risk
                             Values: low | medium | high | critical
   -q, --quiet               Suppress table; print structured output only
@@ -271,6 +275,18 @@ acdi scan ./project --format sarif --output results.sarif
   with:
     sarif_file: acdi.sarif
 ```
+
+### CSV
+
+RFC 4180 CSV with one row per finding occurrence. Eight columns: `Algorithm`, `AssetType`, `QuantumSafety`, `HNDLRisk`, `NISTLevel`, `File`, `Line`, `Evidence`.
+
+```bash
+acdi scan ./project --format csv --quiet > findings.csv
+```
+
+Pipe to pandas, Excel, or any BI tool.
+
+---
 
 ### HTML Migration Report
 
@@ -440,6 +456,9 @@ acdi scan . --fail-on critical --quiet > /dev/null
 | Python | `hashlib.*`, `Crypto.*`, `cryptography.*`, `jwt.encode` |
 | Rust | `RsaPrivateKey`, `p256::`, `sha1::`, `md5::`, `ring::` |
 | JavaScript / TypeScript | `crypto.createHash`, `jose.`, `jsonwebtoken.sign` |
+| Ruby | `OpenSSL::PKey::RSA`, `OpenSSL::Digest::SHA1`, `OpenSSL::Cipher::AES`, `JWT.encode` |
+| PHP | `openssl_pkey_new`, `openssl_encrypt`, `hash('sha1',…)`, `md5()`, `sha1()` |
+| Swift | `P256/P384/P521.Signing`, `SHA256.hash`, `Insecure.SHA1`, `AES.GCM`, `kSecAttrKeyTypeRSA` |
 
 ### Package manifests
 
@@ -449,6 +468,8 @@ acdi scan . --fail-on critical --quiet > /dev/null
 | `package.json` | node-forge, jsonwebtoken, elliptic, crypto-js, bcryptjs, noble-curves |
 | `requirements.txt` / `Pipfile` | cryptography, paramiko, pycryptodome, PyJWT, pyOpenSSL |
 | `go.mod` | golang.org/x/crypto, golang-jwt/jwt, cloudflare/circl |
+| `pom.xml` | bcprov-jdk18on, java-jwt, nimbus-jose-jwt, jjwt-api, spring-security-crypto, tink |
+| `build.gradle` / `build.gradle.kts` | same Java library catalog as pom.xml |
 
 ### Config files
 
@@ -486,6 +507,7 @@ acdi/
 │   │   ├── cbom.rs          # CycloneDX 1.7 serialization
 │   │   ├── sarif.rs         # SARIF 2.1.0 serialization
 │   │   ├── html.rs          # Self-contained HTML report
+│   │   ├── csv.rs           # RFC 4180 CSV emitter
 │   │   └── table.rs         # Terminal table (comfy-table + owo-colors)
 │   ├── probe/
 │   │   ├── tls.rs           # Async TLS handshake (tokio-rustls)
@@ -496,7 +518,7 @@ acdi/
 │   │   └── diff.rs          # diff subcommand logic
 │   └── ignore.rs            # .acdignore rule parsing & matching
 └── tests/
-    ├── integration.rs       # 83 integration tests
+    ├── integration.rs       # 107 integration tests
     └── fixtures/            # Test certificates, source files, configs, manifests
 ```
 

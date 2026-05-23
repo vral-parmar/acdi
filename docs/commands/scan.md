@@ -34,6 +34,7 @@ acdi scan <PATH> [OPTIONS]
 | `cyclonedx-1.7` | CycloneDX 1.7 CBOM JSON (default) |
 | `sarif` | SARIF 2.1.0 JSON |
 | `html` | Self-contained HTML migration report |
+| `csv` | RFC 4180 CSV — 8 columns per occurrence |
 
 ## Fail-on levels
 
@@ -91,6 +92,12 @@ acdi scan ./my-project --format html --output report.html
 acdi scan ./my-project --format sarif --output results.sarif
 ```
 
+### CSV export for data analysis
+
+```bash
+acdi scan ./my-project --format csv --quiet > findings.csv
+```
+
 ### Scan a single certificate
 
 ```bash
@@ -131,9 +138,9 @@ acdi scan ./my-project --no-ignore
 | Scanner | Triggers |
 |---|---|
 | Certificate & key | `.pem`, `.crt`, `.cer`, `.der`, `.key`, `.p12`, `.pfx` |
-| Source code | `.c`, `.cpp`, `.go`, `.java`, `.py`, `.rs`, `.js`, `.ts` |
+| Source code | `.c`, `.cpp`, `.go`, `.java`, `.py`, `.rs`, `.js`, `.ts`, `.rb`, `.php`, `.swift` |
 | Config file | `.yaml`, `.yml`, `.toml`, `.json`, `.env`, `.ini`, `.cfg`, `.conf`, `.properties` |
-| Package manifest | `Cargo.toml`, `package.json`, `requirements.txt`, `Pipfile`, `go.mod` |
+| Package manifest | `Cargo.toml`, `package.json`, `requirements.txt`, `Pipfile`, `go.mod`, `pom.xml`, `build.gradle`, `build.gradle.kts` |
 | Binary | All other files — string extraction fallback |
 
 !!! note

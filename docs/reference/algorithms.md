@@ -73,6 +73,10 @@ Libraries detected in package manifests are mapped to their primary algorithm:
 
 | Library | Primary algorithm |
 |---|---|
+**Rust (Cargo.toml)**
+
+| Library | Primary algorithm |
+|---|---|
 | `openssl` | RSA-2048 |
 | `ring` | ECDSA-P-256 |
 | `rsa` | RSA-2048 |
@@ -84,14 +88,44 @@ Libraries detected in package manifests are mapped to their primary algorithm:
 | `aes` | AES-128 |
 | `pqcrypto-kyber` | ML-KEM-768 |
 | `ml-kem` | ML-KEM-768 |
+
+**JavaScript / Node (package.json)**
+
+| Library | Primary algorithm |
+|---|---|
 | `node-forge` | RSA-2048 |
 | `jsonwebtoken` | RSA-2048 |
 | `elliptic` | ECDSA-P-256 |
-| `cryptography` (Python) | RSA-2048 |
+
+**Python (requirements.txt / Pipfile)**
+
+| Library | Primary algorithm |
+|---|---|
+| `cryptography` | RSA-2048 |
 | `paramiko` | RSA-2048 |
 | `pycryptodome` | RSA-2048 |
+
+**Go (go.mod)**
+
+| Library | Primary algorithm |
+|---|---|
 | `golang.org/x/crypto` | ECDH-P-256 |
 | `golang-jwt/jwt` | RSA-2048 |
 | `cloudflare/circl` | ML-KEM-768 |
 
-Full list: 55+ entries. See `src/detect/manifest.rs` in the source code.
+**Java (pom.xml / build.gradle / build.gradle.kts)**
+
+| Library | Primary algorithm |
+|---|---|
+| `bcprov-jdk18on` | RSA-2048 |
+| `bcpkix-jdk18on` | RSA-2048 |
+| `java-jwt` | RSA-2048 |
+| `jjwt-api` | RSA-2048 |
+| `jjwt-impl` | RSA-2048 |
+| `nimbus-jose-jwt` | ECDSA-P-256 |
+| `spring-security-crypto` | RSA-2048 |
+| `tink` | AES-256 |
+| `conscrypt-openjdk-uber` | ECDSA-P-256 |
+| `google-cloud-kms` | RSA-2048 |
+
+Full list: 75+ entries. See `src/detect/manifest.rs` in the source code.

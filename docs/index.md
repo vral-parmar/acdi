@@ -35,14 +35,16 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 | Capability | Details |
 |---|---|
 | **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size, curve, OID |
-| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS |
+| **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size, curve, OID |
+| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS, Ruby, PHP, Swift |
 | **Binary scanning** | String extraction — algorithm names and OIDs in compiled binaries |
 | **Config file scanning** | YAML, TOML, JSON, .env, .ini — JWT `alg` fields, TLS cipher suites |
-| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod — maps libraries to algorithms |
+| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, **pom.xml, build.gradle** — maps libraries to algorithms |
 | **TLS endpoint probing** | Live handshake — negotiated cipher suite, certificate chain |
 | **CBOM output** | CycloneDX 1.7 with `cryptoProperties` |
 | **SARIF output** | Import into GitHub Advanced Security or VS Code |
 | **HTML report** | Self-contained interactive report with NIST timeline and remediation guide |
+| **CSV output** | RFC 4180 CSV — pipe to Excel, pandas, or BI tools |
 | **`.acdignore`** | Suppress known-acceptable findings |
 | **CBOM diff** | Compare two CBOMs — see what changed |
 | **Risk scoring** | CRITICAL / HIGH / MEDIUM / LOW / NONE |

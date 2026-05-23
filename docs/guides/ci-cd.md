@@ -6,7 +6,7 @@
 
 ## GitHub Actions
 
-### Basic scan with SARIF upload
+### Simplest — use the official action
 
 ```yaml
 name: Cryptography Inventory
@@ -17,8 +17,27 @@ jobs:
   acdi:
     runs-on: ubuntu-latest
     permissions:
-      security-events: write   # required for SARIF upload
+      security-events: write
 
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: vral-parmar/acdi@v0.5.0
+        with:
+          args: 'scan . --format sarif --output acdi.sarif --quiet'
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: acdi.sarif
+          category: cryptography
+```
+
+The action automatically downloads the right binary for the runner OS/arch, caches it, and runs the scan.
+
+### Manual binary download (when you need more control)
+
+```yaml
     steps:
       - uses: actions/checkout@v4
 
@@ -80,17 +99,31 @@ jobs:
 
 ---
 
+## Docker
+
+Run without installing anything:
+
+```bash
+# Scan current directory
+docker run --rm -v "$(pwd)":/src ghcr.io/vral-parmar/acdi scan /src
+
+# Generate HTML report (output written inside the mounted volume)
+docker run --rm -v "$(pwd)":/src \
+  ghcr.io/vral-parmar/acdi scan /src --format html --output /src/report.html --quiet
+
+# Pin a specific version
+docker run --rm -v "$(pwd)":/src ghcr.io/vral-parmar/acdi:0.5.0 scan /src
+```
+
+---
+
 ## GitLab CI
 
 ```yaml
 acdi-scan:
   stage: security
-  image: alpine:latest
-  before_script:
-    - apk add --no-cache curl
-    - curl -Lo /usr/local/bin/acdi
-        https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
-    - chmod +x /usr/local/bin/acdi
+  # Use the Docker image directly — no install step needed
+  image: ghcr.io/vral-parmar/acdi:latest
   script:
     - acdi scan . --format sarif --output gl-sast-report.json --quiet
     - acdi scan . --fail-on critical --quiet > /dev/null

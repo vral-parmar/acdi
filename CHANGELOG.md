@@ -7,6 +7,23 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.0] — 2026-05-23
+
+### Added
+- **Kotlin source patterns**: Android Keystore `KeyProperties.KEY_ALGORITHM_RSA/EC/AES`, `KeyProperties.DIGEST_*` constants, `SecretKeySpec("HmacSHA256")`. All existing JCA patterns (shared with Java) already covered `.kt`/`.kts` files.
+- **C# / .NET source patterns** (new extension `.cs`): `RSA.Create(N)`, `new RSACryptoServiceProvider(N)`, `new RSACng(N)`, `ECDsa.Create(ECCurve.NamedCurves.nistP256/P384/P521)`, `new ECDsaCng(256/384/521)`, `Aes.Create()`, `new AesManaged/AesCsp`, `TripleDES.Create()`, `new TripleDESCryptoServiceProvider()`, `MD5.Create()`, `SHA1/SHA256/SHA384/SHA512.Create()`, `new HMACSHA1/SHA256/SHA384/SHA512/MD5()`.
+- **Terraform HCL scanning** (new extension `.tf`): detects `algorithm = "RSA"/"ECDSA"`, `rsa_bits = 2048`, `ecdsa_curve = "P256"`, AWS KMS `customer_master_key_spec` (`RSA_2048`, `ECC_NIST_P256`, `SYMMETRIC_DEFAULT`), GCP KMS `algorithm` values (`EC_SIGN_P256_SHA256`, etc.).
+- **Kubernetes cert-manager patterns**: `curve: P256/P384/P521` in YAML (`.yaml`/`.yml`) files.
+- `val_prefix` field on `ConfigRule` enabling unambiguous alias lookup for numeric Terraform attributes (e.g., `rsa_bits = 2048` → `RSA-2048`).
+- 23 new integration tests (130 total).
+
+### Changed
+- `SOURCE_EXTENSIONS`: added `cs` (C#).
+- `CONFIG_EXTENSIONS`: added `tf` (Terraform HCL).
+- `normalize_ec_curve`: added `"256" | "384" | "521"` mappings for C# `ECDsaCng(256)` style key sizes.
+
+---
+
 ## [0.4.0] — 2026-05-23
 
 ### Added

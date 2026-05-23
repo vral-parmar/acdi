@@ -1,0 +1,66 @@
+name: 'acdi — Cryptography Scanner'
+description: 'Find quantum-vulnerable cryptographic assets in your codebase, manifests, and certificates.'
+author: 'vral-parmar'
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  args:
+    description: 'Arguments passed directly to acdi (e.g. "scan . --format sarif --output acdi.sarif --quiet")'
+    required: false
+    default: 'scan . --format sarif --output acdi.sarif --quiet'
+  version:
+    description: 'acdi version to install (default: latest release)'
+    required: false
+    default: 'latest'
+  install-only:
+    description: 'If "true", install acdi but do not run it. Use when you need separate run steps.'
+    required: false
+    default: 'false'
+
+outputs:
+  version:
+    description: 'The acdi version that was installed'
+    value: ${{ steps.install.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install acdi
+      id: install
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        VERSION="${{ inputs.version }}"
+        if [ "$VERSION" = "latest" ]; then
+          VERSION=$(curl -fsSL "https://api.github.com/repos/vral-parmar/acdi/releases/latest" \
+            | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+        fi
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+        ARCH=$(uname -m)
+        case "$OS-$ARCH" in
+          linux-x86_64)   BINARY="acdi-x86_64-unknown-linux-musl" ;;
+          linux-aarch64)  BINARY="acdi-aarch64-unknown-linux-musl" ;;
+          darwin-x86_64)  BINARY="acdi-x86_64-apple-darwin" ;;
+          darwin-arm64)   BINARY="acdi-aarch64-apple-darwin" ;;
+          *)
+            echo "::error::Unsupported platform: $OS-$ARCH"
+            exit 1
+            ;;
+        esac
+
+        URL="https://github.com/vral-parmar/acdi/releases/download/v${VERSION}/${BINARY}"
+        echo "Downloading acdi v${VERSION} for ${OS}-${ARCH}..."
+        curl -fsSL "$URL" -o /usr/local/bin/acdi
+        chmod +x /usr/local/bin/acdi
+        acdi --version
+
+    - name: Run acdi
+      if: inputs.install-only != 'true'
+      shell: bash
+      run: acdi ${{ inputs.args }}

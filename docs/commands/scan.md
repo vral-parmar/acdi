@@ -138,8 +138,8 @@ acdi scan ./my-project --no-ignore
 | Scanner | Triggers |
 |---|---|
 | Certificate & key | `.pem`, `.crt`, `.cer`, `.der`, `.key`, `.p12`, `.pfx` |
-| Source code | `.c`, `.cpp`, `.go`, `.java`, `.py`, `.rs`, `.js`, `.ts`, `.rb`, `.php`, `.swift` |
-| Config file | `.yaml`, `.yml`, `.toml`, `.json`, `.env`, `.ini`, `.cfg`, `.conf`, `.properties` |
+| Source code | `.c`, `.cpp`, `.go`, `.java`, `.kt`, `.kts`, `.py`, `.rs`, `.js`, `.ts`, `.rb`, `.php`, `.swift`, `.cs` |
+| Config file | `.yaml`, `.yml`, `.toml`, `.json`, `.env`, `.ini`, `.cfg`, `.conf`, `.properties`, `.tf` |
 | Package manifest | `Cargo.toml`, `package.json`, `requirements.txt`, `Pipfile`, `go.mod`, `pom.xml`, `build.gradle`, `build.gradle.kts` |
 | Binary | All other files — string extraction fallback |
 

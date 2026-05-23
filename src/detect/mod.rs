@@ -20,6 +20,7 @@ const SOURCE_EXTENSIONS: &[&str] = &[
     "rb",                                         // Ruby
     "php",                                        // PHP
     "swift",                                      // Swift
+    "cs",                                         // C# / .NET
 ];
 
 const BINARY_EXTENSIONS: &[&str] = &[
@@ -30,12 +31,13 @@ const BINARY_EXTENSIONS: &[&str] = &[
 ];
 
 const CONFIG_EXTENSIONS: &[&str] = &[
-    "yaml", "yml",        // YAML
+    "yaml", "yml",        // YAML / Kubernetes manifests
     "toml",               // TOML
     "json",               // JSON (also scanned for JWT alg fields)
     "ini", "cfg", "conf", // INI-style
     "properties",         // Java .properties
     "env",                // dotenv / .env files
+    "tf",                 // Terraform HCL
 ];
 
 /// Detect all crypto assets in a single file, dispatching to the appropriate scanner.

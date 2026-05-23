@@ -110,6 +110,32 @@ static CONFIG_VALUE_ALIASES: &[(&str, &str)] = &[
     ("ml-dsa-44", "ML-DSA-44"),
     ("ml-dsa-65", "ML-DSA-65"),
     ("ml-dsa-87", "ML-DSA-87"),
+    // AWS KMS customer_master_key_spec values
+    ("rsa_2048", "RSA-2048"),
+    ("rsa_3072", "RSA-3072"),
+    ("rsa_4096", "RSA-4096"),
+    ("ecc_nist_p256", "ECDSA-P-256"),
+    ("ecc_nist_p384", "ECDSA-P-384"),
+    ("ecc_nist_p521", "ECDSA-P-521"),
+    ("symmetric_default", "AES-256"),
+    ("hmac_256", "SHA-256"),
+    ("hmac_384", "SHA-384"),
+    ("hmac_512", "SHA-512"),
+    // GCP KMS algorithm values
+    ("ec_sign_p256_sha256", "ECDSA-P-256"),
+    ("ec_sign_p384_sha384", "ECDSA-P-384"),
+    ("rsa_decrypt_oaep_2048_sha256", "RSA-2048"),
+    ("rsa_decrypt_oaep_3072_sha256", "RSA-3072"),
+    ("rsa_decrypt_oaep_4096_sha256", "RSA-4096"),
+    ("rsa_sign_pkcs1_2048_sha256", "RSA-2048"),
+    ("rsa_sign_pkcs1_3072_sha256", "RSA-3072"),
+    ("rsa_sign_pkcs1_4096_sha256", "RSA-4096"),
+    ("google_symmetric_encryption", "AES-256"),
+    // Terraform rsa_bits (prefixed to avoid collision with bare numbers)
+    ("rsa_bits:1024", "RSA-1024"),
+    ("rsa_bits:2048", "RSA-2048"),
+    ("rsa_bits:3072", "RSA-3072"),
+    ("rsa_bits:4096", "RSA-4096"),
 ];
 
 fn value_to_canonical(val: &str) -> Option<&'static str> {
@@ -149,6 +175,8 @@ struct ConfigRule {
     regex_str: &'static str,
     /// Restrict to these extensions (empty = all config extensions).
     extensions: &'static [&'static str],
+    /// Prefix prepended to `val` before alias lookup (used by Terraform numeric attrs).
+    val_prefix: &'static str,
 }
 
 static RULES: &[ConfigRule] = &[
@@ -156,21 +184,55 @@ static RULES: &[ConfigRule] = &[
     ConfigRule {
         regex_str: r#"(?i)(?:algorithm|cipher|digest|hash|signing|encryption|signature)[_\-]?(?:algorithm|type|suite|method|function)?\s*[=:]\s*["']?(?P<val>[A-Za-z0-9][A-Za-z0-9_\-\.]*)"#,
         extensions: &[],
+        val_prefix: "",
     },
     // JWT "alg" field — short key, needs surrounding context to avoid false positives
     ConfigRule {
         regex_str: r#"(?i)(?:^|[{,\s\[])["']?alg["']?\s*[=:]\s*["']?(?P<val>[A-Za-z][A-Za-z0-9]+)"#,
         extensions: &["json", "yaml", "yml", "toml", "properties", "env"],
+        val_prefix: "",
     },
     // SSH / TLS key-type declarations
     ConfigRule {
         regex_str: r#"(?i)(?:key[_\-]type|ssh[_\-]?key[_\-]?type|HostKeyAlgorithms?|public[_\-]key[_\-]algorithm)\s*[=:\s]\s*["']?(?P<val>[A-Za-z0-9][A-Za-z0-9_\-\.]*)"#,
         extensions: &[],
+        val_prefix: "",
     },
     // TLS cipher suite names (IANA format TLS_*_WITH_*)
     ConfigRule {
         regex_str: r#"(?P<val>TLS_(?:RSA|DHE_RSA|ECDHE_RSA|ECDHE_ECDSA|DHE_DSS|ECDHE_PSK)_WITH_[A-Z0-9_]+)"#,
         extensions: &[],
+        val_prefix: "",
+    },
+    // Kubernetes cert-manager: curve: P256 / P384 / P521
+    ConfigRule {
+        regex_str: r#"(?i)\bcurve\s*:\s*["']?(?P<val>P256|P384|P521|secp256r1|secp384r1|secp521r1)["']?"#,
+        extensions: &["yaml", "yml"],
+        val_prefix: "",
+    },
+    // Terraform: ecdsa_curve = "P256"
+    ConfigRule {
+        regex_str: r#"ecdsa_curve\s*=\s*["']?(?P<val>P256|P384|P521|secp256r1|secp384r1|secp521r1)["']?"#,
+        extensions: &["tf"],
+        val_prefix: "",
+    },
+    // Terraform: rsa_bits = 2048  (uses val_prefix for unambiguous alias lookup)
+    ConfigRule {
+        regex_str: r"rsa_bits\s*=\s*(?P<val>1024|2048|3072|4096)\b",
+        extensions: &["tf"],
+        val_prefix: "rsa_bits:",
+    },
+    // AWS KMS: customer_master_key_spec = "RSA_2048"
+    ConfigRule {
+        regex_str: r#"customer_master_key_spec\s*=\s*["'](?P<val>[A-Z][A-Z0-9_]+)["']"#,
+        extensions: &["tf"],
+        val_prefix: "",
+    },
+    // GCP KMS / Azure: key_algorithm, key_spec attributes
+    ConfigRule {
+        regex_str: r#"(?i)key[_\-](?:algorithm|spec|ring|purpose)\s*[=:]\s*["']?(?P<val>[A-Za-z0-9][A-Za-z0-9_\-]*)["']?"#,
+        extensions: &["tf", "yaml", "yml"],
+        val_prefix: "",
     },
 ];
 
@@ -241,7 +303,12 @@ pub fn scan_config(path: &Path) -> Result<Vec<CryptoAsset>> {
 
             for caps in re.captures_iter(line) {
                 if let Some(raw) = caps.name("val") {
-                    if let Some(canonical) = value_to_canonical(raw.as_str()) {
+                    let lookup = if rule.val_prefix.is_empty() {
+                        raw.as_str().to_string()
+                    } else {
+                        format!("{}{}", rule.val_prefix, raw.as_str())
+                    };
+                    if let Some(canonical) = value_to_canonical(&lookup) {
                         push_unique(&mut seen, &mut assets, canonical, &source, line_no);
                     }
                 }

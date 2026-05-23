@@ -1,0 +1,8 @@
+target/
+.git/
+docs/
+tests/fixtures/binaries/
+*.md
+*.sarif
+*.cbom.json
+graphify-out/

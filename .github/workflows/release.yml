@@ -145,12 +145,12 @@ jobs:
         with:
           path: dist/
 
-      - name: Create checksums
-        working-directory: dist
+      - name: Flatten artifacts and create checksums
         run: |
-          find . -type f -name 'acdi*' | sort | while read f; do
-            sha256sum "$f"
-          done > SHA256SUMS.txt
+          mkdir release
+          find dist -type f -name 'acdi*' -exec cp {} release/ \;
+          cd release
+          sha256sum acdi-* > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
       - name: Create GitHub Release
@@ -158,5 +158,58 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            dist/**/acdi*
-            dist/SHA256SUMS.txt
+            release/acdi*
+            release/SHA256SUMS.txt
+
+  # ── Update Homebrew tap ───────────────────────────────────────────────────────
+  homebrew:
+    name: Update Homebrew tap
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/
+
+      - name: Compute SHA256 for each platform binary
+        id: shas
+        run: |
+          flatten() { find dist -name "$1" | head -1; }
+          sha() { sha256sum "$(flatten "$1")" | awk '{print $1}'; }
+          echo "macos_arm64=$(sha  acdi-aarch64-apple-darwin)"         >> "$GITHUB_OUTPUT"
+          echo "macos_x86_64=$(sha acdi-x86_64-apple-darwin)"          >> "$GITHUB_OUTPUT"
+          echo "linux_arm64=$(sha  acdi-aarch64-unknown-linux-musl)"   >> "$GITHUB_OUTPUT"
+          echo "linux_x86_64=$(sha acdi-x86_64-unknown-linux-musl)"    >> "$GITHUB_OUTPUT"
+
+      - name: Update formula in homebrew-tap
+        env:
+          TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          if [ -z "$TAP_TOKEN" ]; then
+            echo "HOMEBREW_TAP_TOKEN not set — skipping tap update"
+            exit 0
+          fi
+
+          git clone "https://x-access-token:${TAP_TOKEN}@github.com/vral-parmar/homebrew-tap.git" tap
+          mkdir -p tap/Formula
+
+          VERSION="${VERSION#v}"   # strip leading 'v'
+          sed \
+            -e "s/version \"[^\"]*\"/version \"${VERSION}\"/" \
+            -e "s/PLACEHOLDER_MACOS_ARM64/${{ steps.shas.outputs.macos_arm64 }}/" \
+            -e "s/PLACEHOLDER_MACOS_X86_64/${{ steps.shas.outputs.macos_x86_64 }}/" \
+            -e "s/PLACEHOLDER_LINUX_ARM64/${{ steps.shas.outputs.linux_arm64 }}/" \
+            -e "s/PLACEHOLDER_LINUX_X86_64/${{ steps.shas.outputs.linux_x86_64 }}/" \
+            Formula/acdi.rb > tap/Formula/acdi.rb
+
+          cd tap
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/acdi.rb
+          git diff --cached --quiet || git commit -m "acdi ${VERSION}"
+          git push

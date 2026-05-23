@@ -1,10 +1,56 @@
 # Installation
 
-`acdi` is distributed as a single statically-linked binary — no runtime, no Docker, no Java.
+`acdi` ships as a single statically-linked binary. Pick the method that fits your workflow.
 
 ---
 
-## Pre-built binaries (recommended)
+## Homebrew (macOS / Linux) — recommended
+
+```bash
+brew tap vral-parmar/tap
+brew install acdi
+acdi --version
+```
+
+The tap is automatically updated on every release.
+
+---
+
+## Docker
+
+```bash
+# Scan the current directory — mounts it as /src inside the container
+docker run --rm -v "$(pwd)":/src ghcr.io/vral-parmar/acdi scan /src
+
+# Generate an HTML report
+docker run --rm -v "$(pwd)":/src \
+  ghcr.io/vral-parmar/acdi scan /src --format html --output /src/report.html --quiet
+
+# Pin a specific version
+docker run --rm -v "$(pwd)":/src ghcr.io/vral-parmar/acdi:0.5.0 scan /src
+```
+
+---
+
+## GitHub Action
+
+Add to any GitHub Actions workflow:
+
+```yaml
+- uses: vral-parmar/acdi@v0.5.0
+  with:
+    args: 'scan . --format sarif --output acdi.sarif --quiet'
+
+- uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: acdi.sarif
+```
+
+See [CI/CD Integration](guides/ci-cd.md) for complete examples.
+
+---
+
+## Pre-built binaries
 
 Download the latest release from the [GitHub Releases](https://github.com/vral-parmar/acdi/releases) page.
 

@@ -41,10 +41,11 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 | Capability | Details |
 |---|---|
 | **Certificate scanning** | PEM & DER RSA, ECDSA, Ed25519; key size, curve, OID |
-| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS, **Ruby, PHP, Swift** — OpenSSL, JCA, hashlib, CryptoKit, jwt… |
+| **Source code scanning** | C/C++, Go, Java, **Kotlin**, Python, Rust, JS/TS, Ruby, PHP, Swift, **C#** — OpenSSL, JCA, Android Keystore, .NET Cryptography, CryptoKit… |
 | **Binary scanning** | String extraction — finds algorithm names and OIDs in compiled binaries |
 | **Config file scanning** | YAML, TOML, JSON, .env, .ini JWT `alg` fields, TLS cipher suites, SSH key types |
-| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, Pipfile, **pom.xml, build.gradle** — maps libraries to algorithms |
+| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, Pipfile, pom.xml, build.gradle — maps libraries to algorithms |
+| **Terraform / K8s** | `.tf` HCL — `rsa_bits`, `ecdsa_curve`, AWS KMS `customer_master_key_spec`, GCP KMS `algorithm`; cert-manager `curve:` in YAML |
 | **TLS endpoint probing** | Live handshake — negotiated cipher suite, certificate chain |
 | **CBOM output** | CycloneDX 1.7 with `cryptoProperties`, `assetType`, `algorithmProperties` |
 | **SARIF output** | Import directly into GitHub Advanced Security, VS Code, or any SAST platform |
@@ -58,9 +59,38 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 
 ## Installation
 
-### Pre-built binaries (recommended)
+### Homebrew (macOS / Linux)
 
-Download the latest release from the [GitHub Releases](../../releases) page. Statically linked no runtime dependencies.
+```bash
+brew tap vral-parmar/tap
+brew install acdi
+```
+
+### Docker
+
+```bash
+# Scan the current directory
+docker run --rm -v "$(pwd)":/src ghcr.io/vral-parmar/acdi scan /src
+
+# Generate HTML report
+docker run --rm -v "$(pwd)":/src ghcr.io/vral-parmar/acdi scan /src --format html --output /src/report.html --quiet
+```
+
+### GitHub Action
+
+```yaml
+- uses: vral-parmar/acdi@v0.5.0
+  with:
+    args: 'scan . --format sarif --output acdi.sarif --quiet'
+
+- uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: acdi.sarif
+```
+
+### Pre-built binaries
+
+Download from [GitHub Releases](../../releases). All Linux binaries are statically linked (musl).
 
 ```bash
 # macOS (Apple Silicon)
@@ -71,7 +101,7 @@ chmod +x acdi && sudo mv acdi /usr/local/bin/
 curl -Lo acdi https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-apple-darwin
 chmod +x acdi && sudo mv acdi /usr/local/bin/
 
-# Linux (x86_64, static musl)
+# Linux (x86_64, static)
 curl -Lo acdi https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-unknown-linux-musl
 chmod +x acdi && sudo mv acdi /usr/local/bin/
 
@@ -79,21 +109,21 @@ chmod +x acdi && sudo mv acdi /usr/local/bin/
 Invoke-WebRequest -Uri https://github.com/vral-parmar/acdi/releases/latest/download/acdi-x86_64-pc-windows-msvc.exe -OutFile acdi.exe
 ```
 
+### Cargo install
+
+```bash
+cargo install acdi
+```
+
 ### Build from source
 
-Requires Rust 1.75+ (`rustup` recommended).
+Requires Rust 1.75+.
 
 ```bash
 git clone https://github.com/vral-parmar/acdi
 cd acdi
 cargo build --release
 # Binary at: ./target/release/acdi
-```
-
-### Cargo install
-
-```bash
-cargo install acdi
 ```
 
 ---
@@ -459,6 +489,8 @@ acdi scan . --fail-on critical --quiet > /dev/null
 | Ruby | `OpenSSL::PKey::RSA`, `OpenSSL::Digest::SHA1`, `OpenSSL::Cipher::AES`, `JWT.encode` |
 | PHP | `openssl_pkey_new`, `openssl_encrypt`, `hash('sha1',…)`, `md5()`, `sha1()` |
 | Swift | `P256/P384/P521.Signing`, `SHA256.hash`, `Insecure.SHA1`, `AES.GCM`, `kSecAttrKeyTypeRSA` |
+| Kotlin | Android Keystore `KeyProperties.KEY_ALGORITHM_*`, `KeyProperties.DIGEST_*`, `HmacSHA256` |
+| C# | `RSA.Create(N)`, `new RSACryptoServiceProvider(N)`, `ECDsa.Create(nistP256)`, `Aes.Create()`, `TripleDES.Create()`, `MD5/SHA*.Create()`, `new HMACSHA256()` |
 
 ### Package manifests
 
@@ -470,6 +502,19 @@ acdi scan . --fail-on critical --quiet > /dev/null
 | `go.mod` | golang.org/x/crypto, golang-jwt/jwt, cloudflare/circl |
 | `pom.xml` | bcprov-jdk18on, java-jwt, nimbus-jose-jwt, jjwt-api, spring-security-crypto, tink |
 | `build.gradle` / `build.gradle.kts` | same Java library catalog as pom.xml |
+
+### Terraform / Kubernetes
+
+| Pattern | Detected |
+|---|---|
+| `algorithm = "RSA"/"ECDSA"` | RSA / ECDSA (Terraform `tls_private_key`) |
+| `rsa_bits = 2048` | RSA-2048 |
+| `ecdsa_curve = "P256"` | ECDSA-P-256 |
+| `customer_master_key_spec = "RSA_2048"` | RSA-2048 (AWS KMS) |
+| `customer_master_key_spec = "ECC_NIST_P256"` | ECDSA-P-256 (AWS KMS) |
+| `customer_master_key_spec = "SYMMETRIC_DEFAULT"` | AES-256 (AWS KMS) |
+| `algorithm = "EC_SIGN_P256_SHA256"` | ECDSA-P-256 (GCP KMS) |
+| `curve: P256` | ECDSA-P-256 (Kubernetes cert-manager) |
 
 ### Config files
 
@@ -518,7 +563,7 @@ acdi/
 │   │   └── diff.rs          # diff subcommand logic
 │   └── ignore.rs            # .acdignore rule parsing & matching
 └── tests/
-    ├── integration.rs       # 107 integration tests
+    ├── integration.rs       # 130 integration tests
     └── fixtures/            # Test certificates, source files, configs, manifests
 ```
 

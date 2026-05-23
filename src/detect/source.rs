@@ -225,6 +225,88 @@ static RULES: &[PatternRule] = &[
         regex_str: r"\b(?P<param>md5|sha1)\s*\(",
         extensions: &["php"],
     },
+    // ── Kotlin — Android Keystore (KeyProperties constants) ──────────────────
+    PatternRule {
+        algo_base: "",
+        regex_str: r"\bKeyPairGenerator\.getInstance\s*\(\s*KeyProperties\.KEY_ALGORITHM_(?P<param>RSA|EC|DSA)\b",
+        extensions: &["kt", "kts"],
+    },
+    PatternRule {
+        algo_base: "",
+        regex_str: r"\bKeyGenerator\.getInstance\s*\(\s*KeyProperties\.KEY_ALGORITHM_(?P<param>AES)\b",
+        extensions: &["kt", "kts"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r"\bKeyProperties\.DIGEST_(?P<param>SHA256|SHA384|SHA512|SHA1|MD5)\b",
+        extensions: &["kt", "kts"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r#"\bSecretKeySpec\s*\([^,)]+,\s*"Hmac(?P<param>SHA1|SHA256|SHA384|SHA512)""#,
+        extensions: &["java", "kt", "kts"],
+    },
+    // ── C# — System.Security.Cryptography ────────────────────────────────────
+    PatternRule {
+        algo_base: "RSA",
+        regex_str: r"\bRSA\.Create\s*\(\s*(?P<param>\d+)",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "RSA",
+        regex_str: r"\bnew\s+RSACryptoServiceProvider\s*\(\s*(?P<param>\d+)?",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "RSA",
+        regex_str: r"\bnew\s+RSACng\s*\(\s*(?P<param>\d+)",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "ECDSA",
+        regex_str: r"\bECDsa\.Create\s*\(\s*ECCurve\.NamedCurves\.nist(?P<param>P256|P384|P521)\s*\)",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "ECDSA",
+        regex_str: r"\bnew\s+ECDsaCng\s*\(\s*(?P<param>256|384|521)\s*\)",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "AES",
+        regex_str: r"\bAes\.Create\s*\(",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "AES",
+        regex_str: r"\bnew\s+(?:AesManaged|AesCryptoServiceProvider|AesCng)\s*\(",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "3DES",
+        regex_str: r"\bTripleDES\.Create\s*\(",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "3DES",
+        regex_str: r"\bnew\s+TripleDESCryptoServiceProvider\s*\(",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "MD5",
+        regex_str: r"\bMD5\.Create\s*\(",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r"\bSHA(?P<param>1|256|384|512)\.Create\s*\(",
+        extensions: &["cs"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r"\bnew\s+HMAC(?P<param>SHA1|SHA256|SHA384|SHA512|MD5)\s*\(",
+        extensions: &["cs"],
+    },
     // ── Swift — CryptoKit / Security framework ────────────────────────────────
     PatternRule {
         algo_base: "ECDSA",
@@ -422,11 +504,11 @@ fn normalize_sha(s: &str) -> String {
 
 fn normalize_ec_curve(s: &str) -> String {
     match s.to_uppercase().as_str() {
-        "SECP256R1" | "P256" | "P_256" | "PRIME256V1" | "NID_X9_62_PRIME256V1" => {
+        "SECP256R1" | "P256" | "P_256" | "PRIME256V1" | "NID_X9_62_PRIME256V1" | "256" => {
             "P-256".to_string()
         }
-        "SECP384R1" | "P384" | "P_384" => "P-384".to_string(),
-        "SECP521R1" | "P521" | "P_521" => "P-521".to_string(),
+        "SECP384R1" | "P384" | "P_384" | "384" => "P-384".to_string(),
+        "SECP521R1" | "P521" | "P_521" | "521" => "P-521".to_string(),
         "SECP256K1" | "NID_SECP256K1" => "secp256k1".to_string(),
         _ => s.to_string(),
     }

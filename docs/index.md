@@ -36,10 +36,11 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 |---|---|
 | **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size, curve, OID |
 | **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size, curve, OID |
-| **Source code scanning** | C/C++, Go, Java, Python, Rust, JS/TS, Ruby, PHP, Swift |
+| **Source code scanning** | C/C++, Go, Java, Kotlin, Python, Rust, JS/TS, Ruby, PHP, Swift, C# |
 | **Binary scanning** | String extraction — algorithm names and OIDs in compiled binaries |
 | **Config file scanning** | YAML, TOML, JSON, .env, .ini — JWT `alg` fields, TLS cipher suites |
-| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, **pom.xml, build.gradle** — maps libraries to algorithms |
+| **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, pom.xml, build.gradle — maps libraries to algorithms |
+| **Terraform / Kubernetes** | `.tf` HCL — `rsa_bits`, `ecdsa_curve`, AWS/GCP KMS keys; cert-manager `curve:` in YAML |
 | **TLS endpoint probing** | Live handshake — negotiated cipher suite, certificate chain |
 | **CBOM output** | CycloneDX 1.7 with `cryptoProperties` |
 | **SARIF output** | Import into GitHub Advanced Security or VS Code |

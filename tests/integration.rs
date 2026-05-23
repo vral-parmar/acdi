@@ -1800,3 +1800,241 @@ fn csv_output_correct_column_count() {
         );
     }
 }
+
+// ── Kotlin — Android Keystore ─────────────────────────────────────────────────
+
+#[test]
+fn source_kotlin_detects_android_keystore_rsa() {
+    let assets = detect_in_file(&fixture("source/kotlin_crypto.kt")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "should detect RSA from KeyProperties.KEY_ALGORITHM_RSA; got {names:?}"
+    );
+}
+
+#[test]
+fn source_kotlin_detects_android_keystore_ec() {
+    let assets = detect_in_file(&fixture("source/kotlin_crypto.kt")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("ECDSA")),
+        "should detect ECDSA from KeyProperties.KEY_ALGORITHM_EC; got {names:?}"
+    );
+}
+
+#[test]
+fn source_kotlin_detects_keyproperties_digest_sha1() {
+    let assets = detect_in_file(&fixture("source/kotlin_crypto.kt")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-1"),
+        "should detect SHA-1 from KeyProperties.DIGEST_SHA1; got {names:?}"
+    );
+}
+
+#[test]
+fn source_kotlin_detects_hmac_sha256() {
+    let assets = detect_in_file(&fixture("source/kotlin_crypto.kt")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-256"),
+        "should detect SHA-256 from HmacSHA256 SecretKeySpec; got {names:?}"
+    );
+}
+
+#[test]
+fn source_kotlin_uses_source_code_evidence() {
+    use acdi::model::asset::Evidence;
+    let assets = detect_in_file(&fixture("source/kotlin_crypto.kt")).unwrap();
+    assert!(
+        assets.iter().all(|a| a.evidence == Evidence::SourceCodePattern),
+        "all Kotlin findings should use SourceCodePattern evidence"
+    );
+}
+
+// ── C# — System.Security.Cryptography ────────────────────────────────────────
+
+#[test]
+fn source_csharp_detects_rsa_create() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"RSA-2048"),
+        "should detect RSA-2048 from RSA.Create(2048); got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_rsacng_key_size() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"RSA-4096"),
+        "should detect RSA-4096 from new RSACng(4096); got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_ecdsa_nist_curve() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-256"),
+        "should detect ECDSA-P-256 from ECCurve.NamedCurves.nistP256; got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_ecdsa_p384() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-384"),
+        "should detect ECDSA-P-384 from ECDsa.Create(nistP384); got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_aes_create() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"AES"),
+        "should detect AES from Aes.Create(); got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_tripledes() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"3DES"),
+        "should detect 3DES from TripleDES.Create(); got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_md5_create() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"MD5"),
+        "should detect MD5 from MD5.Create(); got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_sha_create() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-1") && names.contains(&"SHA-256"),
+        "should detect SHA-1 and SHA-256 from SHA1/SHA256.Create(); got {names:?}"
+    );
+}
+
+#[test]
+fn source_csharp_detects_hmacsha256() {
+    let assets = detect_in_file(&fixture("source/csharp_crypto.cs")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-256"),
+        "should detect SHA-256 from new HMACSHA256(); got {names:?}"
+    );
+}
+
+// ── Terraform HCL ─────────────────────────────────────────────────────────────
+
+#[test]
+fn config_terraform_detects_rsa_algorithm() {
+    let assets = detect_in_file(&fixture("config/terraform.tf")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "should detect RSA from algorithm = \"RSA\"; got {names:?}"
+    );
+}
+
+#[test]
+fn config_terraform_detects_rsa_bits() {
+    let assets = detect_in_file(&fixture("config/terraform.tf")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"RSA-2048"),
+        "should detect RSA-2048 from rsa_bits = 2048; got {names:?}"
+    );
+}
+
+#[test]
+fn config_terraform_detects_ecdsa_curve() {
+    let assets = detect_in_file(&fixture("config/terraform.tf")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-256"),
+        "should detect ECDSA-P-256 from ecdsa_curve = \"P256\"; got {names:?}"
+    );
+}
+
+#[test]
+fn config_terraform_detects_aws_kms_rsa() {
+    let assets = detect_in_file(&fixture("config/terraform.tf")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"RSA-2048"),
+        "should detect RSA-2048 from customer_master_key_spec = \"RSA_2048\"; got {names:?}"
+    );
+}
+
+#[test]
+fn config_terraform_detects_aws_kms_ecc() {
+    let assets = detect_in_file(&fixture("config/terraform.tf")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-256"),
+        "should detect ECDSA-P-256 from customer_master_key_spec = \"ECC_NIST_P256\"; got {names:?}"
+    );
+}
+
+#[test]
+fn config_terraform_detects_symmetric_default_aes() {
+    let assets = detect_in_file(&fixture("config/terraform.tf")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"AES-256"),
+        "should detect AES-256 from SYMMETRIC_DEFAULT; got {names:?}"
+    );
+}
+
+// ── Kubernetes cert-manager ───────────────────────────────────────────────────
+
+#[test]
+fn config_k8s_certmanager_detects_rsa_algorithm() {
+    let assets = detect_in_file(&fixture("config/k8s_certmanager.yaml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "should detect RSA from algorithm: RSA; got {names:?}"
+    );
+}
+
+#[test]
+fn config_k8s_certmanager_detects_ecdsa_curve_p256() {
+    let assets = detect_in_file(&fixture("config/k8s_certmanager.yaml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-256"),
+        "should detect ECDSA-P-256 from curve: P256; got {names:?}"
+    );
+}
+
+#[test]
+fn config_k8s_certmanager_detects_ecdsa_curve_p384() {
+    let assets = detect_in_file(&fixture("config/k8s_certmanager.yaml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-384"),
+        "should detect ECDSA-P-384 from curve: P384; got {names:?}"
+    );
+}

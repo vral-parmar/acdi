@@ -1,0 +1,35 @@
+---
+# cert-manager Certificate — RSA-2048
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rsa-cert
+spec:
+  secretName: rsa-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  privateKey:
+    algorithm: RSA
+    size: 2048
+---
+# cert-manager Certificate — ECDSA P-256
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ecdsa-cert
+spec:
+  secretName: ecdsa-tls
+  privateKey:
+    algorithm: ECDSA
+    curve: P256
+---
+# cert-manager Certificate — ECDSA P-384
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ecdsa-p384-cert
+spec:
+  privateKey:
+    algorithm: ECDSA
+    curve: P384

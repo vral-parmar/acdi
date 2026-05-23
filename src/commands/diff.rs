@@ -6,9 +6,10 @@ use std::collections::HashMap;
 
 use anyhow::{Context, Result};
 use owo_colors::OwoColorize;
+use serde::Serialize;
 use serde_json::Value;
 
-use crate::cli::DiffArgs;
+use crate::cli::{DiffArgs, DiffFormat};
 
 #[derive(Debug)]
 struct AssetSummary {
@@ -47,6 +48,66 @@ impl AssetSummary {
         self.quantum_safe.eq_ignore_ascii_case("vulnerable")
     }
 }
+
+// ── JSON output types ─────────────────────────────────────────────────────────
+
+#[derive(Serialize)]
+struct DiffOutput<'a> {
+    before: &'a str,
+    after: &'a str,
+    summary: DiffSummary,
+    added: Vec<AssetEntry>,
+    removed: Vec<AssetEntry>,
+    changed: Vec<ChangedEntry>,
+}
+
+#[derive(Serialize)]
+struct DiffSummary {
+    added: usize,
+    removed: usize,
+    changed: usize,
+    unchanged: usize,
+    vulnerable_before: usize,
+    vulnerable_after: usize,
+}
+
+#[derive(Serialize)]
+struct AssetEntry {
+    name: String,
+    asset_type: String,
+    hndl_risk: String,
+    quantum_safe: String,
+    nist_level: String,
+}
+
+#[derive(Serialize)]
+struct ChangedEntry {
+    name: String,
+    asset_type: String,
+    before: FieldDelta,
+    after: FieldDelta,
+}
+
+#[derive(Serialize)]
+struct FieldDelta {
+    quantum_safe: String,
+    hndl_risk: String,
+    nist_level: String,
+}
+
+impl AssetEntry {
+    fn from(a: &AssetSummary) -> Self {
+        AssetEntry {
+            name: a.name.clone(),
+            asset_type: a.asset_type.clone(),
+            hndl_risk: a.hndl_risk.clone(),
+            quantum_safe: a.quantum_safe.clone(),
+            nist_level: a.nist_level.clone(),
+        }
+    }
+}
+
+// ── Command entry point ───────────────────────────────────────────────────────
 
 pub fn run(args: DiffArgs) -> Result<()> {
     let before_raw = std::fs::read_to_string(&args.before)
@@ -92,91 +153,130 @@ pub fn run(args: DiffArgs) -> Result<()> {
     removed.sort_by(|a, b| a.name.cmp(&b.name));
     changed.sort_by(|a, b| a.0.name.cmp(&b.0.name));
 
-    println!(
-        "CBOM diff: {} → {}",
-        args.before.display(),
-        args.after.display()
-    );
-    println!(
-        "  {} added   {} removed   {} changed   {} unchanged\n",
-        added.len(),
-        removed.len(),
-        changed.len(),
-        unchanged_count,
-    );
-
-    for a in &added {
-        let risk_label = risk_colored(&a.hndl_risk);
-        println!(
-            "  {} {} [{}] risk={} nist={}",
-            "+".green().bold(),
-            a.name.green(),
-            a.asset_type,
-            risk_label,
-            a.nist_level
-        );
-    }
-
-    for r in &removed {
-        let risk_label = risk_colored(&r.hndl_risk);
-        println!(
-            "  {} {} [{}] risk={} nist={}",
-            "-".red().bold(),
-            r.name.red(),
-            r.asset_type,
-            risk_label,
-            r.nist_level
-        );
-    }
-
-    for (before_a, after_a) in &changed {
-        println!(
-            "  {} {} [{}]",
-            "~".yellow().bold(),
-            before_a.name.yellow(),
-            before_a.asset_type
-        );
-        if before_a.quantum_safe != after_a.quantum_safe {
-            println!(
-                "      quantum_safe: {} → {}",
-                qs_colored(&before_a.quantum_safe),
-                qs_colored(&after_a.quantum_safe)
-            );
-        }
-        if before_a.hndl_risk != after_a.hndl_risk {
-            println!(
-                "      hndl_risk:    {} → {}",
-                risk_colored(&before_a.hndl_risk),
-                risk_colored(&after_a.hndl_risk)
-            );
-        }
-        if before_a.nist_level != after_a.nist_level {
-            println!(
-                "      nist_level:   {} → {}",
-                before_a.nist_level, after_a.nist_level
-            );
-        }
-    }
-
-    // Quantum-safety delta summary
     let before_vuln = before_map.values().filter(|a| a.is_vulnerable()).count();
     let after_vuln = after_map.values().filter(|a| a.is_vulnerable()).count();
-    if before_vuln != after_vuln {
-        println!();
-        let delta = after_vuln as i64 - before_vuln as i64;
-        let arrow = if delta > 0 {
-            format!("▲ {delta}").red().to_string()
-        } else {
-            format!("▼ {}", delta.unsigned_abs()).green().to_string()
-        };
-        println!(
-            "  Quantum-vulnerable assets: {} → {} ({})",
-            before_vuln, after_vuln, arrow
-        );
+
+    match args.format {
+        DiffFormat::Json => {
+            let out = DiffOutput {
+                before: args.before.to_str().unwrap_or(""),
+                after: args.after.to_str().unwrap_or(""),
+                summary: DiffSummary {
+                    added: added.len(),
+                    removed: removed.len(),
+                    changed: changed.len(),
+                    unchanged: unchanged_count,
+                    vulnerable_before: before_vuln,
+                    vulnerable_after: after_vuln,
+                },
+                added: added.iter().map(|a| AssetEntry::from(a)).collect(),
+                removed: removed.iter().map(|a| AssetEntry::from(a)).collect(),
+                changed: changed
+                    .iter()
+                    .map(|(b, a)| ChangedEntry {
+                        name: b.name.clone(),
+                        asset_type: b.asset_type.clone(),
+                        before: FieldDelta {
+                            quantum_safe: b.quantum_safe.clone(),
+                            hndl_risk: b.hndl_risk.clone(),
+                            nist_level: b.nist_level.clone(),
+                        },
+                        after: FieldDelta {
+                            quantum_safe: a.quantum_safe.clone(),
+                            hndl_risk: a.hndl_risk.clone(),
+                            nist_level: a.nist_level.clone(),
+                        },
+                    })
+                    .collect(),
+            };
+            println!("{}", serde_json::to_string_pretty(&out)?);
+        }
+
+        DiffFormat::Text => {
+            println!(
+                "CBOM diff: {} → {}",
+                args.before.display(),
+                args.after.display()
+            );
+            println!(
+                "  {} added   {} removed   {} changed   {} unchanged\n",
+                added.len(),
+                removed.len(),
+                changed.len(),
+                unchanged_count,
+            );
+
+            for a in &added {
+                println!(
+                    "  {} {} [{}] risk={} nist={}",
+                    "+".green().bold(),
+                    a.name.green(),
+                    a.asset_type,
+                    risk_colored(&a.hndl_risk),
+                    a.nist_level
+                );
+            }
+
+            for r in &removed {
+                println!(
+                    "  {} {} [{}] risk={} nist={}",
+                    "-".red().bold(),
+                    r.name.red(),
+                    r.asset_type,
+                    risk_colored(&r.hndl_risk),
+                    r.nist_level
+                );
+            }
+
+            for (before_a, after_a) in &changed {
+                println!(
+                    "  {} {} [{}]",
+                    "~".yellow().bold(),
+                    before_a.name.yellow(),
+                    before_a.asset_type
+                );
+                if before_a.quantum_safe != after_a.quantum_safe {
+                    println!(
+                        "      quantum_safe: {} → {}",
+                        qs_colored(&before_a.quantum_safe),
+                        qs_colored(&after_a.quantum_safe)
+                    );
+                }
+                if before_a.hndl_risk != after_a.hndl_risk {
+                    println!(
+                        "      hndl_risk:    {} → {}",
+                        risk_colored(&before_a.hndl_risk),
+                        risk_colored(&after_a.hndl_risk)
+                    );
+                }
+                if before_a.nist_level != after_a.nist_level {
+                    println!(
+                        "      nist_level:   {} → {}",
+                        before_a.nist_level, after_a.nist_level
+                    );
+                }
+            }
+
+            if before_vuln != after_vuln {
+                println!();
+                let delta = after_vuln as i64 - before_vuln as i64;
+                let arrow = if delta > 0 {
+                    format!("▲ {delta}").red().to_string()
+                } else {
+                    format!("▼ {}", delta.unsigned_abs()).green().to_string()
+                };
+                println!(
+                    "  Quantum-vulnerable assets: {} → {} ({})",
+                    before_vuln, after_vuln, arrow
+                );
+            }
+        }
     }
 
     Ok(())
 }
+
+// ── helpers ───────────────────────────────────────────────────────────────────
 
 fn component_map(bom: &Value) -> HashMap<String, AssetSummary> {
     bom["components"]

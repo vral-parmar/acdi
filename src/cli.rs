@@ -37,7 +37,7 @@ impl Cli {
 pub enum Commands {
     /// Scan a filesystem path for cryptographic assets
     Scan(ScanArgs),
-    /// Probe a TLS endpoint for cryptographic posture (Phase 2)
+    /// Probe a TLS endpoint for cryptographic posture
     Tls(TlsArgs),
     /// Compare two CBOM files and show the cryptographic delta
     Diff(DiffArgs),
@@ -50,7 +50,7 @@ pub struct ScanArgs {
     /// Path to scan (file or directory)
     pub path: PathBuf,
 
-    /// Output file path for the CBOM JSON (default: stdout)
+    /// Output file path (default: stdout)
     #[arg(short, long, value_name = "FILE")]
     pub output: Option<PathBuf>,
 
@@ -62,7 +62,7 @@ pub struct ScanArgs {
     #[arg(long, value_name = "LEVEL")]
     pub fail_on: Option<FailOn>,
 
-    /// Suppress table output, print CBOM JSON only
+    /// Suppress table; print only the structured output (respects --format)
     #[arg(long)]
     pub quiet: bool,
 

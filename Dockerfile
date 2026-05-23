@@ -11,9 +11,11 @@ RUN apt-get update && apt-get install -y \
 
 # Cache dependency compilation separately from application code
 COPY Cargo.toml Cargo.lock ./
-RUN mkdir src && echo 'fn main(){}' > src/main.rs && \
-    cargo build --release --locked && \
-    rm -rf src
+RUN mkdir src \
+    && echo 'fn main(){}' > src/main.rs \
+    && touch src/lib.rs \
+    && cargo build --release --locked \
+    && rm -rf src
 
 COPY . .
 # Touch source to force re-compilation of application code only

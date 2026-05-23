@@ -88,6 +88,8 @@ pub enum OutputFormat {
     Sarif,
     #[value(name = "html")]
     Html,
+    #[value(name = "csv")]
+    Csv,
 }
 
 #[derive(ValueEnum, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]

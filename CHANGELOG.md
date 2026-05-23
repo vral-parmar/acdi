@@ -7,6 +7,26 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.4.0] — 2026-05-23
+
+### Added
+- **Maven pom.xml scanning**: detects crypto libraries (BouncyCastle, java-jwt, nimbus-jose-jwt, JJWT, Spring Security Crypto, Tink, etc.) via a state-machine XML parser that extracts `<groupId>:<artifactId>` pairs.
+- **Gradle build.gradle / build.gradle.kts scanning**: detects the same Java crypto library catalog via quoted `group:artifact:version` GAV string matching.
+- **Ruby source patterns**: OpenSSL RSA/EC key generation, OpenSSL Digest (SHA-1, SHA-256, MD5), OpenSSL Cipher AES, JWT.encode/decode with algorithm string normalization.
+- **PHP source patterns**: `openssl_pkey_new`, `openssl_encrypt` (AES-128-CBC/AES-256-GCM/3DES), `hash()` with named algorithm, `md5()`, `sha1()`, `openssl_sign`.
+- **Swift source patterns**: CryptoKit P-256/P-384/P-521 signing/key-agreement, SHA256/SHA384/SHA512 hashing, `Insecure.SHA1`/`Insecure.MD5`, AES-GCM, Security framework RSA (`kSecAttrKeyTypeRSA`).
+- **CSV output format** (`--format csv`): RFC 4180 compliant, 8 columns — Algorithm, AssetType, QuantumSafety, HNDLRisk, NISTLevel, File, Line, Evidence.
+- JWT algorithm string normalization in source patterns: RS256/ES256/HS256 etc. → canonical algorithm names.
+
+### Changed
+- `--format` now accepts `cyclonedx-1.7 | sarif | html | csv`.
+- `diff --format json` now works correctly (was accepted but ignored in 0.3.0).
+
+### Fixed
+- `scan --quiet` output no longer emits a trailing blank line when piped to CSV or HTML formats.
+
+---
+
 ## [0.3.0] — 2026-05-23
 
 ### Added

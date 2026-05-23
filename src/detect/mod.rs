@@ -18,6 +18,8 @@ const SOURCE_EXTENSIONS: &[&str] = &[
     "rs",                                         // Rust
     "js", "mjs", "ts", "jsx", "tsx",              // JavaScript / TypeScript
     "rb",                                         // Ruby
+    "php",                                        // PHP
+    "swift",                                      // Swift
 ];
 
 const BINARY_EXTENSIONS: &[&str] = &[
@@ -45,6 +47,9 @@ const MANIFEST_FILENAMES: &[&str] = &[
     "requirements.txt",
     "Pipfile",
     "go.mod",
+    "pom.xml",
+    "build.gradle",
+    "build.gradle.kts",
 ];
 
 pub fn detect_in_file(path: &std::path::Path) -> anyhow::Result<Vec<crate::model::CryptoAsset>> {

@@ -168,6 +168,99 @@ static RULES: &[PatternRule] = &[
         regex_str: r"\bring::(?:signature|agreement|hmac|aead|digest)::(?P<param>[A-Z][A-Z0-9_]+)",
         extensions: &["rs"],
     },
+    // ── Ruby — OpenSSL / jwt gem ──────────────────────────────────────────────
+    PatternRule {
+        algo_base: "RSA",
+        regex_str: r"\bOpenSSL::PKey::RSA\.new\s*\(\s*(?P<param>\d+)",
+        extensions: &["rb"],
+    },
+    PatternRule {
+        algo_base: "ECDSA",
+        regex_str: r#"\bOpenSSL::PKey::EC\.new\s*\(\s*['"](?P<param>[^'"]+)['"]"#,
+        extensions: &["rb"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r"\bOpenSSL::Digest::(?P<param>SHA1|SHA224|SHA256|SHA384|SHA512|MD5)\b",
+        extensions: &["rb"],
+    },
+    PatternRule {
+        algo_base: "AES",
+        regex_str: r#"\bOpenSSL::Cipher(?:::AES)?\.new\s*\(\s*['"](?P<param>\d+)"#,
+        extensions: &["rb"],
+    },
+    PatternRule {
+        algo_base: "",
+        regex_str: r#"\bJWT\.(?:encode|decode)\s*\([^,]+,[^,]+,\s*['"](?P<param>RS256|RS384|RS512|PS256|PS384|PS512|ES256|ES384|ES512|HS256|HS384|HS512)['"]"#,
+        extensions: &["rb"],
+    },
+    // ── PHP — openssl_* / hash functions ─────────────────────────────────────
+    PatternRule {
+        algo_base: "RSA",
+        regex_str: r"\bopenssl_pkey_new\s*\(",
+        extensions: &["php"],
+    },
+    PatternRule {
+        algo_base: "",
+        regex_str: r#"\bopenssl_(?:sign|verify|private_encrypt|public_decrypt)\s*\("#,
+        extensions: &["php"],
+    },
+    PatternRule {
+        algo_base: "AES",
+        regex_str: r#"\bopenssl_(?:encrypt|decrypt)\s*\([^,]+,\s*['"]aes-(?P<param>\d+)"#,
+        extensions: &["php"],
+    },
+    PatternRule {
+        algo_base: "3DES",
+        regex_str: r#"\bopenssl_(?:encrypt|decrypt)\s*\([^,]+,\s*['"]des-ede3"#,
+        extensions: &["php"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r#"\bhash(?:_hmac)?\s*\(\s*['"](?P<param>sha1|sha224|sha256|sha384|sha512|md5)['"]"#,
+        extensions: &["php"],
+    },
+    PatternRule {
+        algo_base: "",
+        regex_str: r"\b(?P<param>md5|sha1)\s*\(",
+        extensions: &["php"],
+    },
+    // ── Swift — CryptoKit / Security framework ────────────────────────────────
+    PatternRule {
+        algo_base: "ECDSA",
+        regex_str: r"\b(?P<param>P256|P384|P521)\.(?:Signing|KeyAgreement)\.(?:PrivateKey|PublicKey)\s*\(",
+        extensions: &["swift"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r"\b(?P<param>SHA256|SHA384|SHA512)\.hash\s*\(",
+        extensions: &["swift"],
+    },
+    PatternRule {
+        algo_base: "SHA",
+        regex_str: r"\bInsecure\.(?P<param>SHA1|MD5)\.hash\s*\(",
+        extensions: &["swift"],
+    },
+    PatternRule {
+        algo_base: "AES-256",
+        regex_str: r"\bAES\.GCM\b",
+        extensions: &["swift"],
+    },
+    PatternRule {
+        algo_base: "RSA",
+        regex_str: r"\bkSecAttrKeyTypeRSA\b",
+        extensions: &["swift"],
+    },
+    PatternRule {
+        algo_base: "ECDSA",
+        regex_str: r"\bkSecAttrKeyTypeEC(?:DSA)?\b",
+        extensions: &["swift"],
+    },
+    PatternRule {
+        algo_base: "X25519",
+        regex_str: r"\bCurve25519\.KeyAgreement\b",
+        extensions: &["swift"],
+    },
     // ── Generic — config / YAML / JSON / TOML (all source files) ─────────────
     PatternRule {
         algo_base: "",
@@ -389,8 +482,16 @@ fn normalize_generic(s: &str) -> String {
         "SHA-256" | "SHA256" => "SHA-256".to_string(),
         "SHA-384" | "SHA384" => "SHA-384".to_string(),
         "SHA-512" | "SHA512" => "SHA-512".to_string(),
-        "MD5" => "MD5".to_string(),
+        "MD5" | "MD5()" => "MD5".to_string(),
         "MD4" => "MD4".to_string(),
+        // JWT algorithm strings (Ruby jwt gem, Python PyJWT, etc.)
+        "RS256" | "RS384" | "RS512" | "PS256" | "PS384" | "PS512" => "RSA-2048".to_string(),
+        "ES256" => "ECDSA-P-256".to_string(),
+        "ES384" => "ECDSA-P-384".to_string(),
+        "ES512" => "ECDSA-P-521".to_string(),
+        "HS256" => "SHA-256".to_string(),
+        "HS384" => "SHA-384".to_string(),
+        "HS512" => "SHA-512".to_string(),
         other => other.to_string(),
     }
 }

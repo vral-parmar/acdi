@@ -1502,3 +1502,301 @@ fn html_report_scan_stats_section_present() {
     assert!(html.contains("Scan Statistics"), "must have Scan Statistics section");
     assert!(html.contains("Source code"), "stats must include source code row");
 }
+
+// ── Maven pom.xml ─────────────────────────────────────────────────────────────
+
+#[test]
+fn manifest_maven_pom_detects_bouncy_castle() {
+    let assets = detect_in_file(&fixture("manifests/pom.xml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"bcprov-jdk18on"),
+        "should detect BouncyCastle provider; got {names:?}"
+    );
+}
+
+#[test]
+fn manifest_maven_pom_detects_jwt_library() {
+    let assets = detect_in_file(&fixture("manifests/pom.xml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"java-jwt"),
+        "should detect Auth0 java-jwt; got {names:?}"
+    );
+}
+
+#[test]
+fn manifest_maven_pom_detects_nimbus() {
+    let assets = detect_in_file(&fixture("manifests/pom.xml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"nimbus-jose-jwt"),
+        "should detect Nimbus JOSE+JWT; got {names:?}"
+    );
+}
+
+#[test]
+fn manifest_maven_pom_ignores_non_crypto_deps() {
+    let assets = detect_in_file(&fixture("manifests/pom.xml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        !names.contains(&"junit-jupiter"),
+        "should NOT detect junit-jupiter"
+    );
+}
+
+#[test]
+fn manifest_maven_pom_assets_have_library_type() {
+    let assets = detect_in_file(&fixture("manifests/pom.xml")).unwrap();
+    for a in &assets {
+        assert_eq!(
+            a.asset_type,
+            acdi::model::asset::AssetType::Library,
+            "pom.xml findings must be AssetType::Library"
+        );
+    }
+}
+
+// ── Gradle build.gradle ───────────────────────────────────────────────────────
+
+#[test]
+fn manifest_gradle_detects_bouncy_castle() {
+    let assets = detect_in_file(&fixture("manifests/build.gradle")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"bcprov-jdk18on"),
+        "should detect BouncyCastle in build.gradle; got {names:?}"
+    );
+}
+
+#[test]
+fn manifest_gradle_detects_jjwt() {
+    let assets = detect_in_file(&fixture("manifests/build.gradle")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("jjwt")),
+        "should detect jjwt in build.gradle; got {names:?}"
+    );
+}
+
+#[test]
+fn manifest_gradle_ignores_non_crypto_deps() {
+    let assets = detect_in_file(&fixture("manifests/build.gradle")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(!names.contains(&"guava"), "should not detect guava");
+    assert!(!names.contains(&"junit-jupiter"), "should not detect junit-jupiter");
+}
+
+// ── Ruby source ───────────────────────────────────────────────────────────────
+
+#[test]
+fn source_ruby_detects_openssl_rsa() {
+    let assets = detect_in_file(&fixture("source/ruby_crypto.rb")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "should detect RSA from OpenSSL::PKey::RSA; got {names:?}"
+    );
+}
+
+#[test]
+fn source_ruby_detects_sha1_digest() {
+    let assets = detect_in_file(&fixture("source/ruby_crypto.rb")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-1"),
+        "should detect SHA-1 from OpenSSL::Digest::SHA1; got {names:?}"
+    );
+}
+
+#[test]
+fn source_ruby_detects_jwt_rsa() {
+    let assets = detect_in_file(&fixture("source/ruby_crypto.rb")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"RSA-2048"),
+        "should detect RSA-2048 from JWT.encode with RS256; got {names:?}"
+    );
+}
+
+#[test]
+fn source_ruby_uses_source_code_evidence() {
+    let assets = detect_in_file(&fixture("source/ruby_crypto.rb")).unwrap();
+    for a in &assets {
+        assert_eq!(
+            a.evidence,
+            acdi::model::asset::Evidence::SourceCodePattern,
+            "Ruby findings must use SourceCodePattern evidence"
+        );
+    }
+}
+
+// ── PHP source ────────────────────────────────────────────────────────────────
+
+#[test]
+fn source_php_detects_openssl_rsa() {
+    let assets = detect_in_file(&fixture("source/php_crypto.php")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "should detect RSA from openssl_pkey_new; got {names:?}"
+    );
+}
+
+#[test]
+fn source_php_detects_aes_encryption() {
+    let assets = detect_in_file(&fixture("source/php_crypto.php")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("AES")),
+        "should detect AES from openssl_encrypt; got {names:?}"
+    );
+}
+
+#[test]
+fn source_php_detects_md5() {
+    let assets = detect_in_file(&fixture("source/php_crypto.php")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"MD5"),
+        "should detect MD5 from md5() call; got {names:?}"
+    );
+}
+
+#[test]
+fn source_php_detects_sha1_hash() {
+    let assets = detect_in_file(&fixture("source/php_crypto.php")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-1"),
+        "should detect SHA-1 from hash('sha1',...); got {names:?}"
+    );
+}
+
+// ── Swift source ──────────────────────────────────────────────────────────────
+
+#[test]
+fn source_swift_detects_p256_key() {
+    let assets = detect_in_file(&fixture("source/swift_crypto.swift")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-256"),
+        "should detect ECDSA-P-256 from P256.Signing.PrivateKey; got {names:?}"
+    );
+}
+
+#[test]
+fn source_swift_detects_sha256() {
+    let assets = detect_in_file(&fixture("source/swift_crypto.swift")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-256"),
+        "should detect SHA-256 from SHA256.hash; got {names:?}"
+    );
+}
+
+#[test]
+fn source_swift_detects_insecure_sha1() {
+    let assets = detect_in_file(&fixture("source/swift_crypto.swift")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"SHA-1"),
+        "should detect SHA-1 from Insecure.SHA1.hash; got {names:?}"
+    );
+}
+
+#[test]
+fn source_swift_detects_rsa_security_framework() {
+    let assets = detect_in_file(&fixture("source/swift_crypto.swift")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "should detect RSA from kSecAttrKeyTypeRSA; got {names:?}"
+    );
+}
+
+// ── CSV output ────────────────────────────────────────────────────────────────
+
+#[test]
+fn csv_output_has_header_row() {
+    let output = Command::new(env!("CARGO_BIN_EXE_acdi"))
+        .args([
+            "scan",
+            fixture("pems").to_str().unwrap(),
+            "--format", "csv",
+            "--quiet",
+        ])
+        .output()
+        .expect("failed to run acdi scan");
+
+    assert!(output.status.success());
+    let csv = String::from_utf8_lossy(&output.stdout);
+    let first_line = csv.lines().next().unwrap_or("");
+    assert_eq!(
+        first_line,
+        "Algorithm,AssetType,QuantumSafety,HNDLRisk,NISTLevel,File,Line,Evidence",
+        "CSV must start with the correct header"
+    );
+}
+
+#[test]
+fn csv_output_contains_findings() {
+    let output = Command::new(env!("CARGO_BIN_EXE_acdi"))
+        .args([
+            "scan",
+            fixture("pems").to_str().unwrap(),
+            "--format", "csv",
+            "--quiet",
+        ])
+        .output()
+        .expect("failed to run acdi scan");
+
+    let csv = String::from_utf8_lossy(&output.stdout);
+    assert!(csv.contains("RSA-2048"), "CSV must contain RSA-2048");
+    assert!(csv.contains("CRITICAL"), "CSV must contain CRITICAL risk");
+    assert!(csv.contains("certificate-parsing"), "CSV must contain evidence type");
+}
+
+#[test]
+fn csv_output_file_written_by_output_flag() {
+    let dir = tempfile::tempdir().unwrap();
+    let out_file = dir.path().join("findings.csv");
+
+    let status = Command::new(env!("CARGO_BIN_EXE_acdi"))
+        .args([
+            "scan",
+            fixture("source").to_str().unwrap(),
+            "--format", "csv",
+            "--output", out_file.to_str().unwrap(),
+            "--quiet",
+        ])
+        .status()
+        .expect("failed to run acdi scan");
+
+    assert!(status.success());
+    assert!(out_file.exists(), "CSV file must be created");
+    let content = std::fs::read_to_string(&out_file).unwrap();
+    assert!(content.starts_with("Algorithm,"), "file must start with CSV header");
+    assert!(content.lines().count() > 1, "CSV must have data rows");
+}
+
+#[test]
+fn csv_output_correct_column_count() {
+    let output = Command::new(env!("CARGO_BIN_EXE_acdi"))
+        .args([
+            "scan",
+            fixture("pems").to_str().unwrap(),
+            "--format", "csv",
+            "--quiet",
+        ])
+        .output()
+        .expect("failed to run acdi scan");
+
+    let csv = String::from_utf8_lossy(&output.stdout);
+    for line in csv.lines() {
+        assert_eq!(
+            line.split(',').count(), 8,
+            "every CSV row must have 8 columns; got: {line}"
+        );
+    }
+}

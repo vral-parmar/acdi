@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+}
+
+dependencies {
+    // BouncyCastle — RSA-2048
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
+
+    // JJWT — RSA-2048
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+
+    // Nimbus JOSE+JWT — ECDSA-P-256
+    implementation "com.nimbusds:nimbus-jose-jwt:9.37.3"
+
+    // Non-crypto dependency — should not be detected
+    implementation 'com.google.guava:guava:32.0.1-jre'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}

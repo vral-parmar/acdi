@@ -11,7 +11,7 @@ use crate::cli::{FailOn, OutputFormat, ScanArgs};
 use crate::detect::detect_in_file;
 use crate::ignore::IgnoreList;
 use crate::model::{CryptoAsset, Risk};
-use crate::output::{emit_cbom, emit_html, emit_sarif, print_table};
+use crate::output::{emit_cbom, emit_csv, emit_html, emit_sarif, print_table};
 
 pub fn run(args: ScanArgs) -> Result<()> {
     let scan_root = args
@@ -88,9 +88,10 @@ pub fn run(args: ScanArgs) -> Result<()> {
     // Emit output
     let scan_root_str = scan_root.to_string_lossy();
     let output_str = match args.format {
-        OutputFormat::Sarif    => emit_sarif(&assets)?,
-        OutputFormat::Html     => emit_html(&assets, &scan_root_str)?,
+        OutputFormat::Sarif       => emit_sarif(&assets)?,
+        OutputFormat::Html        => emit_html(&assets, &scan_root_str)?,
         OutputFormat::CycloneDx17 => emit_cbom(&assets),
+        OutputFormat::Csv         => emit_csv(&assets),
     };
 
     // Output routing:
@@ -101,6 +102,7 @@ pub fn run(args: ScanArgs) -> Result<()> {
         OutputFormat::Sarif       => "SARIF",
         OutputFormat::Html        => "HTML report",
         OutputFormat::CycloneDx17 => "CBOM",
+        OutputFormat::Csv         => "CSV",
     };
 
     match (&args.output, args.quiet) {
@@ -110,7 +112,9 @@ pub fn run(args: ScanArgs) -> Result<()> {
                     anyhow::anyhow!("Writing {} to '{}': {}", label, out_path.display(), e)
                 })?;
             } else {
-                println!("{output_str}");
+                // Avoid double newline when the format already ends with \n (CSV, HTML)
+                let s = output_str.trim_end_matches('\n');
+                println!("{s}");
             }
         }
         (Some(out_path), false) => {

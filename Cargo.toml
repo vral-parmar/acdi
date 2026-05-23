@@ -6,8 +6,8 @@ license = "MIT"
 description = "Automated Cryptography Discovery & Inventory for PQC migration"
 keywords = ["cryptography", "pqc", "cbom", "security", "cyclonedx"]
 categories = ["command-line-utilities", "cryptography"]
-repository = "https://github.com/YOUR_USERNAME/acdi"
-homepage = "https://github.com/YOUR_USERNAME/acdi"
+repository = "https://github.com/vral-parmar/acdi"
+homepage = "https://github.com/vral-parmar/acdi"
 readme = "README.md"
 
 [[bin]]

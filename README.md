@@ -1,6 +1,5 @@
 # acdi — Automated Cryptography Discovery & Inventory
 
-[![CI](https://github.com/vral-parmar/acdi/actions/workflows/ci.yml/badge.svg)](https://github.com/vral-parmar/acdi/actions/workflows/ci.yml)
 [![Crates.io](https://img.shields.io/crates/v/acdi.svg)](https://crates.io/crates/acdi)
 [![Crates.io Downloads](https://img.shields.io/crates/d/acdi.svg)](https://crates.io/crates/acdi)
 [![docs.rs](https://docs.rs/acdi/badge.svg)](https://docs.rs/acdi)

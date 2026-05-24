@@ -80,4 +80,8 @@ pub enum Evidence {
     ConfigFileRule,
     /// Found as a declared dependency in a package manifest (Cargo.toml, package.json, etc.)
     ManifestDependency,
+    /// Found by parsing the symbol table of an ELF, PE, or Mach-O binary
+    ElfSymbol,
+    /// Found in the constant pool of a Java class file (direct or inside a JAR)
+    JarClassFile,
 }

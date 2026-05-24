@@ -1,0 +1,38 @@
+[package]
+name = "acdi-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+acdi = { path = ".." }
+tempfile = "3"
+
+# Fuzz targets must not be optimised away
+[[bin]]
+name = "fuzz_certs"
+path = "fuzz_targets/fuzz_certs.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_binary"
+path = "fuzz_targets/fuzz_binary.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_config"
+path = "fuzz_targets/fuzz_config.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_jar"
+path = "fuzz_targets/fuzz_jar.rs"
+test = false
+doc = false

@@ -54,7 +54,8 @@ nav:
   - Guides:
     - CI/CD Integration: guides/ci-cd.md
     - GitHub Advanced Security: guides/github-security.md
-    - Terraform & Kubernetes: guides/terraform.md
+    - Terraform, Kubernetes & Ansible: guides/terraform.md
+    - Binary & Java Artifacts: guides/binary-artifacts.md
   - Contributing: contributing.md
   - Changelog: changelog.md
 

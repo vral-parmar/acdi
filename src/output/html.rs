@@ -215,6 +215,8 @@ fn findings_row(asset: &CryptoAsset) -> String {
         Evidence::BinaryStringSearch  => "Binary",
         Evidence::ConfigFileRule      => "Config",
         Evidence::ManifestDependency  => "Manifest",
+        Evidence::ElfSymbol           => "Symbol",
+        Evidence::JarClassFile        => "JAR",
     };
     let qs_class = match asset.quantum_safe {
         QuantumSafety::Vulnerable          => "critical",

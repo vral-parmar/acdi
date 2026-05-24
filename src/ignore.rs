@@ -169,6 +169,8 @@ fn evidence_matches(spec: &str, ev: &Evidence) -> bool {
         Evidence::BinaryStringSearch => "binary-string-search",
         Evidence::ConfigFileRule => "config-file-rule",
         Evidence::ManifestDependency => "manifest-dependency",
+        Evidence::ElfSymbol          => "elf-symbol",
+        Evidence::JarClassFile       => "jar-class-file",
     };
     spec.eq_ignore_ascii_case(canonical)
 }

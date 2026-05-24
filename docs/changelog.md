@@ -7,6 +7,28 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.1] — 2026-05-24
+
+### Added
+- **ELF / PE / Mach-O symbol scanning** (`goblin` 0.8): resolves imported/exported function symbols (OpenSSL, BoringSSL, Windows CNG/CAPI, PKCS#11, libsodium, OQS) to canonical algorithm names. Complements string-search with structured symbol information that survives printable-string stripping.
+- **JAR / WAR / AAR / EAR scanning** (`zip` 2): opens Java archive files, parses every `.class` file's constant pool (CONSTANT_Utf8 entries), and maps JCA class names and algorithm strings (e.g. `javax/crypto/Cipher`, `AES/GCM/NoPadding`, `SHA256withRSA`) to canonical algorithm names.
+- **Standalone `.class` file scanning**: same constant-pool parser applied to individual Java class files.
+- **Private key size / curve extraction** (cert parsing overhaul):
+  - PKCS#8 RSA keys now resolve to `RSA-2048` / `RSA-3072` etc. by parsing the embedded PKCS#1 RSAPrivateKey modulus.
+  - PKCS#1 RSA keys resolve to `RSA-N` by reading the modulus length directly.
+  - PKCS#8 / SEC1 EC keys resolve to `ECDSA-P-256` / `ECDSA-P-384` / `ECDSA-P-521` by extracting the named-curve OID from the AlgorithmIdentifier or ECPrivateKey domain parameters.
+- **Ansible IaC patterns**: `type: RSA/ECDSA/ECC/DSA/Ed25519/X25519` and `size: 1024/2048/3072/4096` fields under `community.crypto.openssl_privatekey` tasks.
+- **AWS CloudFormation KMS patterns**: `KeySpec: RSA_2048 / ECC_NIST_P256 / SYMMETRIC_DEFAULT` values.
+- **Watch mode** (`--watch`): continuous scanning with 500 ms debounce via `notify` 6; prints `[+]` new findings and `[-]` resolved findings on each file-system event.
+- **cargo-fuzz targets** (in `fuzz/`): `fuzz_certs`, `fuzz_binary`, `fuzz_config`, `fuzz_jar` — coverage-guided fuzzing for all security-critical parsers.
+- 12 new integration tests (142 total).
+
+### Changed
+- MSRV bumped to **1.85** (required by `time-macros` 0.2.27 edition 2024 feature).
+- New `Evidence` variants: `ElfSymbol`, `JarClassFile` — reflected in SARIF, CSV, HTML, and `.acdignore` evidence filters.
+
+---
+
 ## [0.5.0] — 2026-05-23
 
 ### Added

@@ -290,5 +290,7 @@ fn format_evidence(ev: &Evidence) -> String {
         Evidence::BinaryStringSearch => "binary-string-search".to_string(),
         Evidence::ConfigFileRule => "config-file-rule".to_string(),
         Evidence::ManifestDependency => "manifest-dependency".to_string(),
+        Evidence::ElfSymbol => "elf-symbol".to_string(),
+        Evidence::JarClassFile => "jar-class-file".to_string(),
     }
 }

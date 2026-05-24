@@ -2038,3 +2038,136 @@ fn config_k8s_certmanager_detects_ecdsa_curve_p384() {
         "should detect ECDSA-P-384 from curve: P384; got {names:?}"
     );
 }
+
+// ── Private key size extraction (v0.5.1) ─────────────────────────────────────
+
+#[test]
+fn key_pkcs8_rsa2048_reports_size() {
+    let assets = detect_in_file(&fixture("keys/rsa2048.key.pem")).unwrap();
+    assert!(!assets.is_empty(), "PKCS#8 RSA key should be detected");
+    let asset = &assets[0];
+    assert_eq!(asset.name, "RSA-2048", "PKCS#8 RSA key name should include size");
+    assert_eq!(asset.parameter_set, Some("2048".to_string()));
+}
+
+#[test]
+fn key_pkcs1_rsa2048_reports_size() {
+    let assets = detect_in_file(&fixture("keys/rsa2048_pkcs1.pem")).unwrap();
+    assert!(!assets.is_empty(), "PKCS#1 RSA key should be detected");
+    let asset = &assets[0];
+    assert_eq!(asset.name, "RSA-2048", "PKCS#1 RSA key name should include size");
+    assert_eq!(asset.parameter_set, Some("2048".to_string()));
+}
+
+#[test]
+fn key_sec1_ec_p256_reports_curve() {
+    let assets = detect_in_file(&fixture("keys/ec_p256.key.pem")).unwrap();
+    assert!(!assets.is_empty(), "EC P-256 key should be detected");
+    let asset = &assets[0];
+    assert_eq!(asset.name, "ECDSA-P-256", "EC key name should include curve");
+    assert_eq!(asset.parameter_set, Some("P-256".to_string()));
+}
+
+// ── JAR / class file scanning (v0.5.1) ───────────────────────────────────────
+
+#[test]
+fn jar_scan_finds_rsa_and_aes() {
+    let assets = detect_in_file(&fixture("binaries/crypto_sample.jar")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "JAR scan should detect RSA; got {names:?}"
+    );
+    assert!(
+        names.iter().any(|n| n.starts_with("AES")),
+        "JAR scan should detect AES; got {names:?}"
+    );
+}
+
+#[test]
+fn class_file_scan_finds_rsa_and_aes() {
+    let assets = detect_in_file(&fixture("binaries/SampleCrypto.class")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("RSA")),
+        "class file scan should detect RSA; got {names:?}"
+    );
+    assert!(
+        names.iter().any(|n| n.starts_with("AES")),
+        "class file scan should detect AES; got {names:?}"
+    );
+}
+
+#[test]
+fn jar_scan_uses_jar_class_file_evidence() {
+    use acdi::model::asset::Evidence;
+    let assets = detect_in_file(&fixture("binaries/crypto_sample.jar")).unwrap();
+    assert!(
+        assets.iter().any(|a| a.evidence == Evidence::JarClassFile),
+        "JAR assets should have JarClassFile evidence"
+    );
+}
+
+// ── Ansible IaC patterns (v0.5.1) ────────────────────────────────────────────
+
+#[test]
+fn ansible_detects_rsa_with_size() {
+    let assets = detect_in_file(&fixture("config/ansible_crypto.yml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"RSA-2048"),
+        "Ansible RSA size:2048 should yield RSA-2048; got {names:?}"
+    );
+}
+
+#[test]
+fn ansible_detects_ecdsa() {
+    let assets = detect_in_file(&fixture("config/ansible_crypto.yml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("ECDSA")),
+        "Ansible ECC type should yield ECDSA; got {names:?}"
+    );
+}
+
+#[test]
+fn ansible_detects_ed25519() {
+    let assets = detect_in_file(&fixture("config/ansible_crypto.yml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"Ed25519"),
+        "Ansible Ed25519 type should be detected; got {names:?}"
+    );
+}
+
+// ── CloudFormation IaC patterns (v0.5.1) ─────────────────────────────────────
+
+#[test]
+fn cloudformation_detects_rsa_2048() {
+    let assets = detect_in_file(&fixture("config/cloudformation.yml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"RSA-2048"),
+        "CloudFormation KeySpec RSA_2048 should yield RSA-2048; got {names:?}"
+    );
+}
+
+#[test]
+fn cloudformation_detects_ecc_nist_p256() {
+    let assets = detect_in_file(&fixture("config/cloudformation.yml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.contains(&"ECDSA-P-256"),
+        "CloudFormation KeySpec ECC_NIST_P256 should yield ECDSA-P-256; got {names:?}"
+    );
+}
+
+#[test]
+fn cloudformation_detects_symmetric_default_aes() {
+    let assets = detect_in_file(&fixture("config/cloudformation.yml")).unwrap();
+    let names: Vec<&str> = assets.iter().map(|a| a.name.as_str()).collect();
+    assert!(
+        names.iter().any(|n| n.starts_with("AES")),
+        "CloudFormation KeySpec SYMMETRIC_DEFAULT should yield AES; got {names:?}"
+    );
+}

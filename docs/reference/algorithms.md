@@ -4,7 +4,11 @@ This page lists the cryptographic algorithms that `acdi` recognises and classifi
 
 **Supported source languages**: C, C++, Go, Java, Kotlin, Python, Rust, JavaScript/TypeScript, Ruby, PHP, Swift, C# (.NET)
 
-**Supported config/IaC formats**: YAML, TOML, JSON, .env, .properties, .ini, .cfg, .conf, Terraform HCL (`.tf`), Kubernetes YAML
+**Supported config/IaC formats**: YAML, TOML, JSON, .env, .properties, .ini, .cfg, .conf, Terraform HCL (`.tf`), Kubernetes cert-manager YAML, Ansible playbooks (YAML), AWS CloudFormation (YAML/JSON)
+
+**Supported binary formats**: ELF (Linux/Android), PE (Windows), Mach-O (macOS/iOS), fat Mach-O — symbol table; string + OID extraction fallback for all other binaries
+
+**Supported Java artifact formats**: `.jar`, `.war`, `.ear`, `.aar` archives; `.class` files — Java class constant pool parsing
 
 ---
 

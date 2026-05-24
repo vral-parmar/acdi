@@ -1,6 +1,6 @@
 [package]
 name = "acdi"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 rust-version = "1.85"
 license = "MIT"
@@ -66,6 +66,13 @@ uuid = { version = "1", features = ["v4"] }
 # Logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Binary artifact analysis
+goblin = { version = "0.8", default-features = false, features = ["elf64", "elf32", "mach64", "mach32", "pe64", "pe32"] }
+zip = { version = "2", default-features = false, features = ["deflate"] }
+
+# Watch mode
+notify = "6"
 
 [dev-dependencies]
 tempfile = "3"

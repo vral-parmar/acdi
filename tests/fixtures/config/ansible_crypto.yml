@@ -1,0 +1,20 @@
+---
+- name: Generate crypto keys
+  hosts: all
+  tasks:
+    - name: Generate RSA private key
+      community.crypto.openssl_privatekey:
+        path: /etc/ssl/private/server.key
+        type: RSA
+        size: 2048
+
+    - name: Generate EC private key
+      community.crypto.openssl_privatekey:
+        path: /etc/ssl/private/ec.key
+        type: ECC
+        curve: secp256r1
+
+    - name: Generate Ed25519 key
+      community.crypto.openssl_privatekey:
+        path: /etc/ssl/private/ed.key
+        type: Ed25519

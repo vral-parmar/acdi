@@ -3,8 +3,10 @@
 pub mod binary;
 pub mod certs;
 pub mod config;
+pub mod jar;
 pub mod manifest;
 pub mod source;
+pub mod symbols;
 
 pub use certs::detect_in_bytes_pem_der;
 
@@ -29,6 +31,15 @@ const BINARY_EXTENSIONS: &[&str] = &[
     "wasm",                       // WebAssembly
     "elf",                        // explicit ELF
 ];
+
+const JAR_EXTENSIONS: &[&str] = &[
+    "jar",  // Java archive
+    "war",  // Web archive
+    "ear",  // Enterprise archive
+    "aar",  // Android archive
+];
+
+const CLASS_EXTENSIONS: &[&str] = &["class"];
 
 const CONFIG_EXTENSIONS: &[&str] = &[
     "yaml", "yml",        // YAML / Kubernetes manifests
@@ -82,9 +93,19 @@ pub fn detect_in_file(path: &std::path::Path) -> anyhow::Result<Vec<crate::model
         return source::scan_source(path);
     }
 
-    // Binary files (by extension)
+    // JAR / WAR / AAR / EAR
+    if JAR_EXTENSIONS.contains(&ext.as_str()) {
+        return jar::scan_jar(path);
+    }
+
+    // Java .class files
+    if CLASS_EXTENSIONS.contains(&ext.as_str()) {
+        return jar::scan_class_file(path);
+    }
+
+    // Binary files (by extension) — string scan + symbol table
     if BINARY_EXTENSIONS.contains(&ext.as_str()) {
-        return binary::scan_binary(path);
+        return scan_binary_full(path);
     }
 
     // Configuration files
@@ -93,9 +114,28 @@ pub fn detect_in_file(path: &std::path::Path) -> anyhow::Result<Vec<crate::model
     }
 
     // Extension-less or unknown — sniff magic bytes
-    match (certs::looks_like_pem_pub(path), binary::has_binary_magic(path)) {
-        (Ok(true), _) => certs::detect_in_file(path),
-        (_, Ok(true)) => binary::scan_binary(path),
-        _ => Ok(vec![]),
+    let is_pem = certs::looks_like_pem_pub(path).unwrap_or(false);
+    if is_pem { return certs::detect_in_file(path); }
+    let is_bin = binary::has_binary_magic(path).unwrap_or(false);
+    if is_bin { return scan_binary_full(path); }
+    let is_jar = jar::has_jar_magic(path).unwrap_or(false);
+    if is_jar { return jar::scan_jar(path); }
+    Ok(vec![])
+}
+
+/// Run both string-based binary scan and symbol-table scan, merging results.
+/// Prefer symbol-scan entries when both find the same algorithm (structured data wins).
+fn scan_binary_full(path: &std::path::Path) -> anyhow::Result<Vec<crate::model::CryptoAsset>> {
+    let mut assets = binary::scan_binary(path)?;
+    match symbols::scan_symbols(path) {
+        Ok(sym_assets) => {
+            // Symbol-scan results take priority: replace any string-scan entry for the same name.
+            let sym_names: std::collections::HashSet<&str> =
+                sym_assets.iter().map(|a| a.name.as_str()).collect();
+            assets.retain(|a| !sym_names.contains(a.name.as_str()));
+            assets.extend(sym_assets);
+        }
+        Err(e) => tracing::debug!("symbol scan skipped for {}: {e}", path.display()),
     }
+    Ok(assets)
 }

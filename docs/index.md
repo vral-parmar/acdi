@@ -34,14 +34,14 @@ Before you migrate, you need to know *what* you have. `acdi` automates that disc
 
 | Capability | Details |
 |---|---|
-| **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size, curve, OID |
-| **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size, curve, OID |
+| **Certificate scanning** | PEM & DER — RSA, ECDSA, Ed25519; key size extracted from PKCS#8, PKCS#1, SEC1 DER |
 | **Source code scanning** | C/C++, Go, Java, Kotlin, Python, Rust, JS/TS, Ruby, PHP, Swift, C# |
-| **Binary scanning** | String extraction — algorithm names and OIDs in compiled binaries |
-| **Config file scanning** | YAML, TOML, JSON, .env, .ini — JWT `alg` fields, TLS cipher suites |
+| **Binary / symbol scanning** | ELF, PE, Mach-O — resolves imported/exported crypto function symbols; string + OID extraction fallback |
+| **JAR / class file scanning** | Opens `.jar`/`.war`/`.ear`/`.aar` archives; parses Java class constant pools for JCA algorithm strings |
+| **Config / IaC scanning** | YAML, TOML, JSON, .env, .ini, Terraform HCL, Ansible playbooks, AWS CloudFormation |
 | **Package manifests** | Cargo.toml, package.json, requirements.txt, go.mod, pom.xml, build.gradle — maps libraries to algorithms |
-| **Terraform / Kubernetes** | `.tf` HCL — `rsa_bits`, `ecdsa_curve`, AWS/GCP KMS keys; cert-manager `curve:` in YAML |
 | **TLS endpoint probing** | Live handshake — negotiated cipher suite, certificate chain |
+| **Watch mode** | `--watch` — continuous re-scan on file-system events; shows `[+]` new / `[-]` resolved findings |
 | **CBOM output** | CycloneDX 1.7 with `cryptoProperties` |
 | **SARIF output** | Import into GitHub Advanced Security or VS Code |
 | **HTML report** | Self-contained interactive report with NIST timeline and remediation guide |

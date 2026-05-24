@@ -136,6 +136,13 @@ static CONFIG_VALUE_ALIASES: &[(&str, &str)] = &[
     ("rsa_bits:2048", "RSA-2048"),
     ("rsa_bits:3072", "RSA-3072"),
     ("rsa_bits:4096", "RSA-4096"),
+    // Ansible openssl_privatekey size: N (uses same rsa_bits prefix)
+    ("ansible_size:1024", "RSA-1024"),
+    ("ansible_size:2048", "RSA-2048"),
+    ("ansible_size:3072", "RSA-3072"),
+    ("ansible_size:4096", "RSA-4096"),
+    // Ansible type: / CloudFormation Type: values
+    ("ecc", "ECDSA"),
 ];
 
 fn value_to_canonical(val: &str) -> Option<&'static str> {
@@ -233,6 +240,24 @@ static RULES: &[ConfigRule] = &[
         regex_str: r#"(?i)key[_\-](?:algorithm|spec|ring|purpose)\s*[=:]\s*["']?(?P<val>[A-Za-z0-9][A-Za-z0-9_\-]*)["']?"#,
         extensions: &["tf", "yaml", "yml"],
         val_prefix: "",
+    },
+    // CloudFormation AWS::KMS::Key — KeySpec: RSA_2048 / ECC_NIST_P256
+    ConfigRule {
+        regex_str: r#"(?i)KeySpec\s*:\s*["']?(?P<val>[A-Z][A-Z0-9_]+)["']?"#,
+        extensions: &["yaml", "yml", "json"],
+        val_prefix: "",
+    },
+    // Ansible community.crypto.openssl_privatekey — type: RSA/ECC/Ed25519
+    ConfigRule {
+        regex_str: r#"(?i)^\s{0,16}type\s*:\s*["']?(?P<val>RSA|ECDSA|ECC|DSA|Ed25519|X25519)["']?"#,
+        extensions: &["yaml", "yml"],
+        val_prefix: "",
+    },
+    // Ansible openssl_privatekey — size: 2048 (RSA key size)
+    ConfigRule {
+        regex_str: r"^\s{0,16}size\s*:\s*(?P<val>1024|2048|3072|4096)\b",
+        extensions: &["yaml", "yml"],
+        val_prefix: "ansible_size:",
     },
 ];
 

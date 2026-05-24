@@ -21,6 +21,7 @@ acdi scan <PATH> [OPTIONS]
 | `-o, --output <FILE>` | — | Write output to this file. When set, the human table still goes to stdout. |
 | `--format <FORMAT>` | `cyclonedx-1.7` | Output format. See below. |
 | `--fail-on <LEVEL>` | — | Exit code 1 if any finding meets or exceeds this risk level. |
+| `--watch` | off | Continuous scan mode — re-scan on file-system events, printing `[+]` new findings and `[-]` resolved findings. Press Ctrl-C to stop. |
 | `-q, --quiet` | off | Suppress the table; print structured output only. |
 | `--follow-links` | off | Follow symbolic links when walking directories. |
 | `--ignore-file <FILE>` | `<PATH>/.acdignore` | Path to a custom ignore file. |
@@ -129,6 +130,21 @@ acdi scan ./my-project --ignore-file ./security/exceptions.acdignore
 acdi scan ./my-project --no-ignore
 ```
 
+### Watch mode — live re-scan
+
+```bash
+acdi scan ./my-project --watch
+```
+
+Watches the directory for file-system events. On each change, re-runs the full scan and prints a diff:
+
+```
+[+] RSA-1024  CRITICAL  src/auth/legacy.go:42
+[-] SHA-1     MEDIUM    src/hash.py:18
+```
+
+Press **Ctrl-C** to stop.
+
 ---
 
 ## What gets scanned
@@ -139,9 +155,15 @@ acdi scan ./my-project --no-ignore
 |---|---|
 | Certificate & key | `.pem`, `.crt`, `.cer`, `.der`, `.key`, `.p12`, `.pfx` |
 | Source code | `.c`, `.cpp`, `.go`, `.java`, `.kt`, `.kts`, `.py`, `.rs`, `.js`, `.ts`, `.rb`, `.php`, `.swift`, `.cs` |
-| Config file | `.yaml`, `.yml`, `.toml`, `.json`, `.env`, `.ini`, `.cfg`, `.conf`, `.properties`, `.tf` |
+| Config / IaC | `.yaml`, `.yml`, `.toml`, `.json`, `.env`, `.ini`, `.cfg`, `.conf`, `.properties`, `.tf` |
 | Package manifest | `Cargo.toml`, `package.json`, `requirements.txt`, `Pipfile`, `go.mod`, `pom.xml`, `build.gradle`, `build.gradle.kts` |
-| Binary | All other files — string extraction fallback |
+| Java archives | `.jar`, `.war`, `.ear`, `.aar` — opens archive, parses every `.class` constant pool |
+| Java class file | `.class` — parses constant pool directly |
+| Binary (symbols) | ELF / PE / Mach-O — resolves imported/exported function symbols to algorithm names |
+| Binary (strings) | All other files — string extraction + OID scan fallback |
 
 !!! note
     Package manifests are matched by **filename** before the extension is checked — so `Cargo.toml` is always scanned as a manifest, not a TOML config file.
+
+!!! note
+    Files without an extension are sniffed by magic bytes: ZIP magic (`PK\x03\x04`) triggers the JAR scanner; ELF/PE/Mach-O magic triggers the symbol scanner; everything else falls through to string extraction.

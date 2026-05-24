@@ -60,7 +60,9 @@ Examples:
 | `certificate-parsing` | PEM / DER certificate or key file |
 | `source-code-pattern` | Regex match in source code |
 | `binary-string-search` | String extraction from compiled binary |
-| `config-file-rule` | Key/value in YAML, TOML, JSON, .env, etc. |
+| `elf-symbol` | ELF / PE / Mach-O imported or exported function symbol |
+| `jar-class-file` | Java class constant pool (inside `.jar`, `.war`, `.ear`, `.aar`, or `.class`) |
+| `config-file-rule` | Key/value in YAML, TOML, JSON, .env, Terraform HCL, etc. |
 | `manifest-dependency` | Library in Cargo.toml, package.json, etc. |
 | `tls-handshake` | Live TLS endpoint probe |
 

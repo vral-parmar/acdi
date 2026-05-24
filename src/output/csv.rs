@@ -108,5 +108,7 @@ fn format_evidence(e: &Evidence) -> &'static str {
         Evidence::BinaryStringSearch  => "binary-string-search",
         Evidence::ConfigFileRule      => "config-file-rule",
         Evidence::ManifestDependency  => "manifest-dependency",
+        Evidence::ElfSymbol           => "elf-symbol",
+        Evidence::JarClassFile        => "jar-class-file",
     }
 }

@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  SigningKey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeySpec: RSA_2048
+      KeyUsage: SIGN_VERIFY
+  EcKey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeySpec: ECC_NIST_P256
+      KeyUsage: SIGN_VERIFY
+  SymKey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeySpec: SYMMETRIC_DEFAULT
+      KeyUsage: ENCRYPT_DECRYPT

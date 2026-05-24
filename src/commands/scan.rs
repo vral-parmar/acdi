@@ -1,10 +1,14 @@
 #![forbid(unsafe_code)]
 
+use std::collections::HashSet;
 use std::path::Path;
+use std::sync::mpsc;
+use std::time::Duration;
 
 use anyhow::{bail, Result};
 use ignore::WalkBuilder;
 use indicatif::{ProgressBar, ProgressStyle};
+use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use rayon::prelude::*;
 
 use crate::cli::{FailOn, OutputFormat, ScanArgs};
@@ -18,6 +22,10 @@ pub fn run(args: ScanArgs) -> Result<()> {
         .path
         .canonicalize()
         .map_err(|e| anyhow::anyhow!("Cannot access path '{}': {}", args.path.display(), e))?;
+
+    if args.watch {
+        return run_watch(args, scan_root);
+    }
 
     tracing::debug!("Scanning {}", scan_root.display());
 
@@ -171,6 +179,95 @@ fn fail_on_to_risk(fail_on: &FailOn) -> Risk {
         FailOn::High => Risk::High,
         FailOn::Critical => Risk::Critical,
     }
+}
+
+// ── Watch mode ────────────────────────────────────────────────────────────────
+
+fn run_watch(args: ScanArgs, scan_root: std::path::PathBuf) -> Result<()> {
+    eprintln!("acdi watch — watching {} (Ctrl-C to stop)", scan_root.display());
+
+    let mut prev_assets = do_scan(&args, &scan_root)?;
+    let scan_root_str = scan_root.to_string_lossy().into_owned();
+    print_table(&prev_assets, &scan_root_str);
+    eprintln!("  {} findings — watching for changes…", prev_assets.len());
+
+    let (tx, rx) = mpsc::channel::<notify::Result<notify::Event>>();
+    let mut watcher = RecommendedWatcher::new(tx, notify::Config::default())?;
+    watcher.watch(&scan_root, RecursiveMode::Recursive)?;
+
+    loop {
+        // Block until the first event arrives
+        match rx.recv() {
+            Err(_) => break,
+            Ok(Err(e)) => { tracing::warn!("watch error: {e}"); continue; }
+            Ok(Ok(_)) => {}
+        }
+
+        // Drain further events for 500 ms to debounce rapid saves
+        let deadline = std::time::Instant::now() + Duration::from_millis(500);
+        while std::time::Instant::now() < deadline {
+            match rx.recv_timeout(Duration::from_millis(50)) {
+                Ok(_) | Err(mpsc::RecvTimeoutError::Timeout) => {}
+                Err(mpsc::RecvTimeoutError::Disconnected) => break,
+            }
+        }
+
+        eprintln!("\n→ change detected, re-scanning…");
+        let new_assets = match do_scan(&args, &scan_root) {
+            Ok(a) => a,
+            Err(e) => { tracing::warn!("scan error: {e}"); continue; }
+        };
+
+        print_watch_diff(&prev_assets, &new_assets);
+        prev_assets = new_assets;
+    }
+
+    Ok(())
+}
+
+/// Run a single scan pass and return sorted assets.
+fn do_scan(args: &ScanArgs, scan_root: &std::path::Path) -> Result<Vec<CryptoAsset>> {
+    let files = collect_files(scan_root, args.follow_links);
+    let results: Vec<Vec<CryptoAsset>> = files
+        .par_iter()
+        .map(|path| detect_in_file(path).unwrap_or_default())
+        .collect();
+
+    let mut assets: Vec<CryptoAsset> = results.into_iter().flatten().collect();
+    let ignore = load_ignore(scan_root, args);
+    if !ignore.is_empty() {
+        assets.retain(|a| !ignore.suppresses(a));
+    }
+    assets.sort_by(|a, b| b.hndl_risk.cmp(&a.hndl_risk));
+    Ok(assets)
+}
+
+/// Print a compact diff between two scans.
+fn print_watch_diff(prev: &[CryptoAsset], next: &[CryptoAsset]) {
+    let prev_keys: HashSet<String> = prev.iter().map(asset_key).collect();
+    let next_keys: HashSet<String> = next.iter().map(asset_key).collect();
+
+    let added: Vec<&CryptoAsset> = next.iter().filter(|a| !prev_keys.contains(&asset_key(a))).collect();
+    let removed: Vec<&CryptoAsset> = prev.iter().filter(|a| !next_keys.contains(&asset_key(a))).collect();
+
+    if added.is_empty() && removed.is_empty() {
+        eprintln!("  no change ({} findings)", next.len());
+        return;
+    }
+    for a in &added {
+        let loc = a.locations.first().map(|l| l.source.as_str()).unwrap_or("?");
+        eprintln!("  [+] {} — {}", a.name, loc);
+    }
+    for a in &removed {
+        let loc = a.locations.first().map(|l| l.source.as_str()).unwrap_or("?");
+        eprintln!("  [-] {} — {}", a.name, loc);
+    }
+    eprintln!("  {} new, {} resolved ({} total)", added.len(), removed.len(), next.len());
+}
+
+fn asset_key(a: &CryptoAsset) -> String {
+    let loc = a.locations.first().map(|l| format!("{}:{}", l.source, l.line.unwrap_or(0))).unwrap_or_default();
+    format!("{}:{}", a.name, loc)
 }
 
 fn load_ignore(scan_root: &Path, args: &crate::cli::ScanArgs) -> IgnoreList {

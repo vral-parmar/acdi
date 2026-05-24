@@ -246,5 +246,9 @@ pub fn has_binary_magic(path: &Path) -> Result<bool> {
         // Mach-O big-endian 32/64
         | [0xfe, 0xed, 0xfa, 0xce]
         | [0xfe, 0xed, 0xfa, 0xcf]
+        // Mach-O fat binary (universal binary) — also Java class magic, but
+        // goblin handles disambiguation: fat Mach-O parses correctly, class
+        // files have the .class extension and are already handled above.
+        | [0xca, 0xfe, 0xba, 0xbe]
     ))
 }

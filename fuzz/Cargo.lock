@@ -7,7 +7,6 @@ name = "acdi"
 version = "0.5.1"
 dependencies = [
  "anyhow",
- "base64",
  "chrono",
  "clap",
  "comfy-table",
@@ -24,7 +23,6 @@ dependencies = [
  "rustls-pemfile",
  "serde",
  "serde_json",
- "tempfile",
  "thiserror 2.0.18",
  "tokio",
  "tokio-rustls",
@@ -34,6 +32,15 @@ dependencies = [
  "webpki-roots 0.26.11",
  "x509-parser",
  "zip",
+]
+
+[[package]]
+name = "acdi-fuzz"
+version = "0.0.0"
+dependencies = [
+ "acdi",
+ "libfuzzer-sys",
+ "tempfile",
 ]
 
 [[package]]
@@ -209,12 +216,6 @@ dependencies = [
  "dunce",
  "fs_extra",
 ]
-
-[[package]]
-name = "base64"
-version = "0.22.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "bitflags"
@@ -940,6 +941,16 @@ name = "libc"
 version = "0.2.186"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
+
+[[package]]
+name = "libfuzzer-sys"
+version = "0.4.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f12a681b7dd8ce12bff52488013ba614b869148d54dd79836ab85aafdd53f08d"
+dependencies = [
+ "arbitrary",
+ "cc",
+]
 
 [[package]]
 name = "linux-raw-sys"

@@ -1,6 +1,6 @@
-# Terraform & Kubernetes Scanning
+# Terraform, Kubernetes, Ansible & CloudFormation Scanning
 
-`acdi` v0.5.0 extends config scanning to Terraform HCL (`.tf`) and Kubernetes cert-manager manifests (`.yaml`/`.yml`), so infrastructure-as-code crypto choices are inventoried alongside application code.
+`acdi` scans infrastructure-as-code files alongside application code, covering Terraform HCL, Kubernetes cert-manager manifests, Ansible playbooks, and AWS CloudFormation templates.
 
 ---
 
@@ -128,7 +128,92 @@ See [`.acdignore` reference](../reference/acdignore.md) for full syntax.
 
 ---
 
+---
+
+## Ansible playbooks
+
+### What is detected
+
+| Attribute | Values | Resolved algorithm |
+|---|---|---|
+| `type` | `RSA`, `ECDSA`, `ECC`, `DSA`, `Ed25519`, `X25519` | RSA-2048, ECDSA, Ed25519, X25519 |
+| `size` | `1024`, `2048`, `3072`, `4096` | RSA-1024, RSA-2048, RSA-3072, RSA-4096 |
+
+These match the `community.crypto.openssl_privatekey` task fields but also any YAML file that uses the same attribute names.
+
+### Example
+
+```yaml
+- name: Generate RSA key
+  community.crypto.openssl_privatekey:
+    path: /etc/ssl/private/server.key
+    type: RSA        # → detected: RSA-2048
+    size: 2048       # → detected: RSA-2048
+
+- name: Generate EC key
+  community.crypto.openssl_privatekey:
+    path: /etc/ssl/private/ec.key
+    type: ECC        # → detected: ECDSA
+
+- name: Generate Ed25519 key
+  community.crypto.openssl_privatekey:
+    path: /etc/ssl/private/ed.key
+    type: Ed25519    # → detected: Ed25519
+```
+
+### Run a scan
+
+```bash
+acdi scan ./ansible/
+acdi scan site.yml
+```
+
+---
+
+## AWS CloudFormation
+
+### What is detected
+
+| Attribute | Values | Resolved algorithm |
+|---|---|---|
+| `KeySpec` | `RSA_2048`, `RSA_3072`, `RSA_4096` | RSA-2048, RSA-3072, RSA-4096 |
+| `KeySpec` | `ECC_NIST_P256`, `ECC_NIST_P384`, `ECC_NIST_P521` | ECDSA-P-256, ECDSA-P-384, ECDSA-P-521 |
+| `KeySpec` | `SYMMETRIC_DEFAULT` | AES-256 |
+
+### Example
+
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  SigningKey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeySpec: RSA_2048          # → detected: RSA-2048
+      KeyUsage: SIGN_VERIFY
+
+  EcKey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeySpec: ECC_NIST_P256     # → detected: ECDSA-P-256
+      KeyUsage: SIGN_VERIFY
+
+  SymKey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeySpec: SYMMETRIC_DEFAULT # → detected: AES-256
+      KeyUsage: ENCRYPT_DECRYPT
+```
+
+### Run a scan
+
+```bash
+acdi scan ./cloudformation/
+acdi scan template.yaml
+```
+
+---
+
 ## CI/CD integration
 
-Terraform and Kubernetes files are picked up automatically — no extra flags needed.
+All IaC formats are picked up automatically — no extra flags needed.
 See [CI/CD Integration](ci-cd.md) for complete pipeline examples.

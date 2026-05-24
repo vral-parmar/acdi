@@ -77,6 +77,10 @@ pub struct ScanArgs {
     /// Do not load any .acdignore file
     #[arg(long)]
     pub no_ignore: bool,
+
+    /// Re-scan automatically when files change; print a diff on each change
+    #[arg(long)]
+    pub watch: bool,
 }
 
 #[derive(ValueEnum, Clone, Debug, Default, PartialEq, Eq)]

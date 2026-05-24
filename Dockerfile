@@ -18,8 +18,8 @@ RUN mkdir src \
     && rm -rf src
 
 COPY . .
-# Touch source to force re-compilation of application code only
-RUN touch src/main.rs && cargo build --release --locked
+# Touch all Rust source files so cargo recompiles from real code, not dummy artifacts
+RUN find src -name '*.rs' | xargs touch && cargo build --release --locked
 
 # ── Stage 2: runtime ─────────────────────────────────────────────────────────
 FROM debian:bookworm-slim

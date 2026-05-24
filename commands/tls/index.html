@@ -781,6 +781,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#html-migration-report-from-a-tls-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML migration report from a TLS scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#probe-multiple-endpoints-from-a-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -819,10 +830,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
+  <a href="#output-formats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output
+        Output formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-reported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is reported
       
     </span>
   </a>
@@ -1512,6 +1534,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#html-migration-report-from-a-tls-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML migration report from a TLS scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#probe-multiple-endpoints-from-a-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1550,10 +1583,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
+  <a href="#output-formats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output
+        Output formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-reported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is reported
       
     </span>
   </a>
@@ -1629,7 +1673,12 @@
 <tr>
 <td><code>-o, --output &lt;FILE&gt;</code></td>
 <td>—</td>
-<td>Write CBOM JSON to this file.</td>
+<td>Write output to this file. When set, the human table still goes to stdout.</td>
+</tr>
+<tr>
+<td><code>--format &lt;FORMAT&gt;</code></td>
+<td><code>cyclonedx-1.7</code></td>
+<td>Output format: <code>cyclonedx-1.7</code>, <code>sarif</code>, <code>html</code>, <code>csv</code>.</td>
 </tr>
 <tr>
 <td><code>--concurrency &lt;N&gt;</code></td>
@@ -1648,24 +1697,54 @@
 <h3 id="probe-a-single-endpoint">Probe a single endpoint<a class="headerlink" href="#probe-a-single-endpoint" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>api.example.com:443
 </code></pre></div>
+<h3 id="html-migration-report-from-a-tls-scan">HTML migration report from a TLS scan<a class="headerlink" href="#html-migration-report-from-a-tls-scan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>api.example.com:443<span class="w"> </span>--format<span class="w"> </span>html<span class="w"> </span>--output<span class="w"> </span>tls-report.html
+</code></pre></div>
 <h3 id="probe-multiple-endpoints-from-a-file">Probe multiple endpoints from a file<a class="headerlink" href="#probe-multiple-endpoints-from-a-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>--hosts<span class="w"> </span>endpoints.txt<span class="w"> </span>--output<span class="w"> </span>tls-cbom.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>--hosts<span class="w"> </span>endpoints.txt<span class="w"> </span>--output<span class="w"> </span>tls-cbom.json
 </code></pre></div>
 <h3 id="endpointstxt-format">endpoints.txt format<a class="headerlink" href="#endpointstxt-format" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Production APIs
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>api.example.com:443
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>auth.example.com:443
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a># Internal services
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>db.internal:5432
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># cache.internal:6380  ← commented out
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Production APIs
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>api.example.com:443
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>auth.example.com:443
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a># Internal services
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>db.internal:5432
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a># cache.internal:6380  ← commented out
 </code></pre></div>
 <h3 id="high-concurrency-bulk-scan">High-concurrency bulk scan<a class="headerlink" href="#high-concurrency-bulk-scan" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>--hosts<span class="w"> </span>all-hosts.txt<span class="w"> </span>--concurrency<span class="w"> </span><span class="m">100</span><span class="w"> </span>--timeout<span class="w"> </span><span class="m">5</span><span class="w"> </span>--output<span class="w"> </span>tls-cbom.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>acdi<span class="w"> </span>tls<span class="w"> </span>--hosts<span class="w"> </span>all-hosts.txt<span class="w"> </span>--concurrency<span class="w"> </span><span class="m">100</span><span class="w"> </span>--timeout<span class="w"> </span><span class="m">5</span><span class="w"> </span>--output<span class="w"> </span>tls-cbom.json
 </code></pre></div>
 <hr />
-<h2 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h2>
-<p><code>acdi tls</code> emits a CycloneDX 1.7 CBOM with:</p>
+<h2 id="output-formats">Output formats<a class="headerlink" href="#output-formats" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cyclonedx-1.7</code></td>
+<td>CycloneDX 1.7 CBOM JSON (default)</td>
+</tr>
+<tr>
+<td><code>sarif</code></td>
+<td>SARIF 2.1.0 — import into GitHub Advanced Security</td>
+</tr>
+<tr>
+<td><code>html</code></td>
+<td>Self-contained HTML migration report</td>
+</tr>
+<tr>
+<td><code>csv</code></td>
+<td>RFC 4180 CSV — 8 columns per finding</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-is-reported">What is reported<a class="headerlink" href="#what-is-reported" title="Permanent link">&para;</a></h2>
+<p><code>acdi tls</code> probes the endpoint and inventories:</p>
 <ul>
 <li><strong>Negotiated cipher suite</strong> — the algorithm family (e.g. <code>ECDHE-RSA-AES256-GCM-SHA384</code> → RSA key exchange)</li>
 <li><strong>Certificate chain</strong> — each certificate in the chain as a <code>certificate</code> asset with key algorithm, key size, and OID</li>

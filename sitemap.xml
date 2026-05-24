@@ -2,74 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://vral-parmar.github.io/acdi/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/changelog/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/contributing/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/installation/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/quickstart/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/commands/diff/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/commands/scan/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/commands/tls/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/formats/cbom/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/formats/csv/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/formats/html/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/formats/sarif/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
+    </url>
+    <url>
+         <loc>https://vral-parmar.github.io/acdi/guides/binary-artifacts/</loc>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/guides/ci-cd/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/guides/github-security/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/guides/terraform/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/reference/acdignore/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/reference/algorithms/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
     <url>
          <loc>https://vral-parmar.github.io/acdi/reference/risk-model/</loc>
-         <lastmod>2026-05-23</lastmod>
+         <lastmod>2026-05-24</lastmod>
     </url>
 </urlset>

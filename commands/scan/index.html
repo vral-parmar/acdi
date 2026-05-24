@@ -895,6 +895,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#watch-mode-live-re-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Watch mode — live re-scan
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1425,7 +1436,35 @@
   <span class="md-ellipsis">
     
   
-    Terraform & Kubernetes
+    Terraform, Kubernetes & Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/binary-artifacts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binary & Java Artifacts
   
 
     
@@ -1725,6 +1764,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#watch-mode-live-re-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Watch mode — live re-scan
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1805,6 +1855,11 @@
 <td><code>--fail-on &lt;LEVEL&gt;</code></td>
 <td>—</td>
 <td>Exit code 1 if any finding meets or exceeds this risk level.</td>
+</tr>
+<tr>
+<td><code>--watch</code></td>
+<td>off</td>
+<td>Continuous scan mode — re-scan on file-system events, printing <code>[+]</code> new findings and <code>[-]</code> resolved findings. Press Ctrl-C to stop.</td>
 </tr>
 <tr>
 <td><code>-q, --quiet</code></td>
@@ -1957,6 +2012,14 @@
 <h3 id="bypass-ignore-rules-full-audit">Bypass ignore rules (full audit)<a class="headerlink" href="#bypass-ignore-rules-full-audit" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>acdi<span class="w"> </span>scan<span class="w"> </span>./my-project<span class="w"> </span>--no-ignore
 </code></pre></div>
+<h3 id="watch-mode-live-re-scan">Watch mode — live re-scan<a class="headerlink" href="#watch-mode-live-re-scan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>acdi<span class="w"> </span>scan<span class="w"> </span>./my-project<span class="w"> </span>--watch
+</code></pre></div>
+<p>Watches the directory for file-system events. On each change, re-runs the full scan and prints a diff:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>[+] RSA-1024  CRITICAL  src/auth/legacy.go:42
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>[-] SHA-1     MEDIUM    src/hash.py:18
+</code></pre></div>
+<p>Press <strong>Ctrl-C</strong> to stop.</p>
 <hr />
 <h2 id="what-gets-scanned">What gets scanned<a class="headerlink" href="#what-gets-scanned" title="Permanent link">&para;</a></h2>
 <p><code>acdi scan</code> routes each file to the appropriate scanner based on filename and extension:</p>
@@ -1977,7 +2040,7 @@
 <td><code>.c</code>, <code>.cpp</code>, <code>.go</code>, <code>.java</code>, <code>.kt</code>, <code>.kts</code>, <code>.py</code>, <code>.rs</code>, <code>.js</code>, <code>.ts</code>, <code>.rb</code>, <code>.php</code>, <code>.swift</code>, <code>.cs</code></td>
 </tr>
 <tr>
-<td>Config file</td>
+<td>Config / IaC</td>
 <td><code>.yaml</code>, <code>.yml</code>, <code>.toml</code>, <code>.json</code>, <code>.env</code>, <code>.ini</code>, <code>.cfg</code>, <code>.conf</code>, <code>.properties</code>, <code>.tf</code></td>
 </tr>
 <tr>
@@ -1985,14 +2048,30 @@
 <td><code>Cargo.toml</code>, <code>package.json</code>, <code>requirements.txt</code>, <code>Pipfile</code>, <code>go.mod</code>, <code>pom.xml</code>, <code>build.gradle</code>, <code>build.gradle.kts</code></td>
 </tr>
 <tr>
-<td>Binary</td>
-<td>All other files — string extraction fallback</td>
+<td>Java archives</td>
+<td><code>.jar</code>, <code>.war</code>, <code>.ear</code>, <code>.aar</code> — opens archive, parses every <code>.class</code> constant pool</td>
+</tr>
+<tr>
+<td>Java class file</td>
+<td><code>.class</code> — parses constant pool directly</td>
+</tr>
+<tr>
+<td>Binary (symbols)</td>
+<td>ELF / PE / Mach-O — resolves imported/exported function symbols to algorithm names</td>
+</tr>
+<tr>
+<td>Binary (strings)</td>
+<td>All other files — string extraction + OID scan fallback</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Package manifests are matched by <strong>filename</strong> before the extension is checked — so <code>Cargo.toml</code> is always scanned as a manifest, not a TOML config file.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Files without an extension are sniffed by magic bytes: ZIP magic (<code>PK\x03\x04</code>) triggers the JAR scanner; ELF/PE/Mach-O magic triggers the symbol scanner; everything else falls through to string extraction.</p>
 </div>
 
 

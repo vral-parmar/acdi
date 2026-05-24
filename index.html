@@ -1238,7 +1238,35 @@
   <span class="md-ellipsis">
     
   
-    Terraform & Kubernetes
+    Terraform, Kubernetes & Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guides/binary-artifacts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binary & Java Artifacts
   
 
     
@@ -1423,35 +1451,35 @@
 <tbody>
 <tr>
 <td><strong>Certificate scanning</strong></td>
-<td>PEM &amp; DER — RSA, ECDSA, Ed25519; key size, curve, OID</td>
-</tr>
-<tr>
-<td><strong>Certificate scanning</strong></td>
-<td>PEM &amp; DER — RSA, ECDSA, Ed25519; key size, curve, OID</td>
+<td>PEM &amp; DER — RSA, ECDSA, Ed25519; key size extracted from PKCS#8, PKCS#1, SEC1 DER</td>
 </tr>
 <tr>
 <td><strong>Source code scanning</strong></td>
 <td>C/C++, Go, Java, Kotlin, Python, Rust, JS/TS, Ruby, PHP, Swift, C#</td>
 </tr>
 <tr>
-<td><strong>Binary scanning</strong></td>
-<td>String extraction — algorithm names and OIDs in compiled binaries</td>
+<td><strong>Binary / symbol scanning</strong></td>
+<td>ELF, PE, Mach-O — resolves imported/exported crypto function symbols; string + OID extraction fallback</td>
 </tr>
 <tr>
-<td><strong>Config file scanning</strong></td>
-<td>YAML, TOML, JSON, .env, .ini — JWT <code>alg</code> fields, TLS cipher suites</td>
+<td><strong>JAR / class file scanning</strong></td>
+<td>Opens <code>.jar</code>/<code>.war</code>/<code>.ear</code>/<code>.aar</code> archives; parses Java class constant pools for JCA algorithm strings</td>
+</tr>
+<tr>
+<td><strong>Config / IaC scanning</strong></td>
+<td>YAML, TOML, JSON, .env, .ini, Terraform HCL, Ansible playbooks, AWS CloudFormation</td>
 </tr>
 <tr>
 <td><strong>Package manifests</strong></td>
 <td>Cargo.toml, package.json, requirements.txt, go.mod, pom.xml, build.gradle — maps libraries to algorithms</td>
 </tr>
 <tr>
-<td><strong>Terraform / Kubernetes</strong></td>
-<td><code>.tf</code> HCL — <code>rsa_bits</code>, <code>ecdsa_curve</code>, AWS/GCP KMS keys; cert-manager <code>curve:</code> in YAML</td>
-</tr>
-<tr>
 <td><strong>TLS endpoint probing</strong></td>
 <td>Live handshake — negotiated cipher suite, certificate chain</td>
+</tr>
+<tr>
+<td><strong>Watch mode</strong></td>
+<td><code>--watch</code> — continuous re-scan on file-system events; shows <code>[+]</code> new / <code>[-]</code> resolved findings</td>
 </tr>
 <tr>
 <td><strong>CBOM output</strong></td>

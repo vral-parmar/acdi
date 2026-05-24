@@ -115,9 +115,13 @@ pub struct TlsArgs {
     #[arg(long, value_name = "FILE")]
     pub hosts: Option<PathBuf>,
 
-    /// Output file for CBOM JSON
+    /// Output file path (default: stdout)
     #[arg(short, long, value_name = "FILE")]
     pub output: Option<PathBuf>,
+
+    /// Output format
+    #[arg(long, default_value = "cyclonedx-1.7", value_name = "FORMAT")]
+    pub format: OutputFormat,
 
     /// Maximum concurrent TLS connections
     #[arg(long, default_value = "50")]

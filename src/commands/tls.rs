@@ -9,10 +9,10 @@ use indicatif::{ProgressBar, ProgressStyle};
 use tokio::sync::Semaphore;
 use tokio::task::JoinSet;
 
-use crate::cli::TlsArgs;
+use crate::cli::{OutputFormat, TlsArgs};
 use crate::detect::detect_in_bytes_pem_der;
 use crate::model::CryptoAsset;
-use crate::output::{emit_cbom, print_table};
+use crate::output::{emit_cbom, emit_csv, emit_html, emit_sarif, print_table};
 use crate::probe::pqc::detect_pqc_hybrid;
 use crate::probe::tls::{parse_target, probe, TlsHandshakeResult};
 
@@ -91,16 +91,30 @@ pub async fn run(args: TlsArgs) -> Result<()> {
         eprintln!("warn: {err}");
     }
 
-    let cbom = emit_cbom(&all_assets);
+    all_assets.sort_by(|a, b| b.hndl_risk.cmp(&a.hndl_risk));
+
+    let label = match args.format {
+        OutputFormat::Html        => "HTML report",
+        OutputFormat::Sarif       => "SARIF",
+        OutputFormat::Csv         => "CSV",
+        OutputFormat::CycloneDx17 => "CBOM",
+    };
+
+    let output_str = match args.format {
+        OutputFormat::Html        => emit_html(&all_assets, "TLS endpoints")?,
+        OutputFormat::Sarif       => emit_sarif(&all_assets)?,
+        OutputFormat::Csv         => emit_csv(&all_assets),
+        OutputFormat::CycloneDx17 => emit_cbom(&all_assets),
+    };
 
     if let Some(out_path) = &args.output {
-        std::fs::write(out_path, &cbom)
-            .with_context(|| format!("writing CBOM to {}", out_path.display()))?;
+        std::fs::write(out_path, output_str.as_bytes())
+            .with_context(|| format!("writing {} to {}", label, out_path.display()))?;
         print_table(&all_assets, "TLS endpoints");
-        eprintln!("Wrote CBOM to {}", out_path.display());
+        println!("✓ {label} written → {}", out_path.display());
     } else {
         print_table(&all_assets, "TLS endpoints");
-        println!("{cbom}");
+        println!("{output_str}");
     }
 
     Ok(())

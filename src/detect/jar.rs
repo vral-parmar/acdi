@@ -192,7 +192,7 @@ fn scan_class_bytes(
             3 | 4 => { pos += 4; i += 1; }  // Integer / Float
             5 | 6 => { pos += 8; i += 2; }  // Long / Double (takes 2 slots)
             7 | 8 | 16 | 19 | 20 => { pos += 2; i += 1; }  // Class / String / MethodType / Module / Package
-            9 | 10 | 11 | 12 => { pos += 4; i += 1; }  // Fieldref / Methodref / InterfaceMethodref / NameAndType
+            9..=12 => { pos += 4; i += 1; }  // Fieldref / Methodref / InterfaceMethodref / NameAndType
             15 => { pos += 3; i += 1; }  // MethodHandle
             17 | 18 => { pos += 4; i += 1; }  // Dynamic / InvokeDynamic
             _ => { return; }  // Unknown tag — stop parsing

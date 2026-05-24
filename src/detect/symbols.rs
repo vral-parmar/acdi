@@ -152,13 +152,10 @@ fn scan_macho_symbols(
     source: &str,
 ) {
     if let Some(syms) = &mach.symbols {
-        for sym in syms.iter() {
-            if let Ok((raw_name, _)) = sym {
-                // Strip leading underscore (Mach-O ABI convention)
-                let name = raw_name.trim_start_matches('_');
-                if !name.is_empty() {
-                    check_symbol(name, seen, assets, source);
-                }
+        for (raw_name, _) in syms.iter().flatten() {
+            let name = raw_name.trim_start_matches('_');
+            if !name.is_empty() {
+                check_symbol(name, seen, assets, source);
             }
         }
     }

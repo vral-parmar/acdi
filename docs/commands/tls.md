@@ -19,7 +19,8 @@ acdi tls [TARGET] [OPTIONS]
 | Flag | Default | Description |
 |---|---|---|
 | `--hosts <FILE>` | — | File with one `host:port` per line. `#` lines are comments. |
-| `-o, --output <FILE>` | — | Write CBOM JSON to this file. |
+| `-o, --output <FILE>` | — | Write output to this file. When set, the human table still goes to stdout. |
+| `--format <FORMAT>` | `cyclonedx-1.7` | Output format: `cyclonedx-1.7`, `sarif`, `html`, `csv`. |
 | `--concurrency <N>` | `50` | Maximum concurrent TLS connections. |
 | `--timeout <SECS>` | `10` | Per-host timeout in seconds. |
 
@@ -31,6 +32,12 @@ acdi tls [TARGET] [OPTIONS]
 
 ```bash
 acdi tls api.example.com:443
+```
+
+### HTML migration report from a TLS scan
+
+```bash
+acdi tls api.example.com:443 --format html --output tls-report.html
 ```
 
 ### Probe multiple endpoints from a file
@@ -59,9 +66,18 @@ acdi tls --hosts all-hosts.txt --concurrency 100 --timeout 5 --output tls-cbom.j
 
 ---
 
-## Output
+## Output formats
 
-`acdi tls` emits a CycloneDX 1.7 CBOM with:
+| Value | Description |
+|---|---|
+| `cyclonedx-1.7` | CycloneDX 1.7 CBOM JSON (default) |
+| `sarif` | SARIF 2.1.0 — import into GitHub Advanced Security |
+| `html` | Self-contained HTML migration report |
+| `csv` | RFC 4180 CSV — 8 columns per finding |
+
+## What is reported
+
+`acdi tls` probes the endpoint and inventories:
 
 - **Negotiated cipher suite** — the algorithm family (e.g. `ECDHE-RSA-AES256-GCM-SHA384` → RSA key exchange)
 - **Certificate chain** — each certificate in the chain as a `certificate` asset with key algorithm, key size, and OID

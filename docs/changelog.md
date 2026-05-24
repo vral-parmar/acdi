@@ -7,6 +7,13 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.2] — 2026-05-24
+
+### Added
+- **`acdi tls --format`**: TLS endpoint scans now support all four output formats — `cyclonedx-1.7` (default), `sarif`, `html`, and `csv`. Generate a full HTML migration report directly from a TLS probe: `acdi tls api.example.com:443 --format html --output report.html`.
+
+---
+
 ## [0.5.1] — 2026-05-24
 
 ### Added

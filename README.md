@@ -8,7 +8,7 @@
 
 **Find every quantum-vulnerable algorithm in your codebase, certificates, and TLS endpoints in seconds.**
 
-`acdi` is a single-binary CLI that scans filesystems, source code, package manifests, config files, PEM/DER certificates, compiled binaries, and live TLS endpoints for cryptographic assets. It emits a [CycloneDX 1.7 CBOM](https://cyclonedx.org/capabilities/cbom/), SARIF 2.1, or an interactive HTML migration report — ready for your PQC migration programme.
+`acdi` is a single-binary CLI that scans filesystems, source code, package manifests, config files, PEM/DER certificates, compiled binaries, and live TLS endpoints for cryptographic assets. It emits a [CycloneDX 1.7 CBOM](https://cyclonedx.org/capabilities/cbom/), SARIF 2.1, or an interactive HTML migration report — ready for your PQC migration programme. and work well in air gapped systems.
 
 ```
 acdi scan ./my-project

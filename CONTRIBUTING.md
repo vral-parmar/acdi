@@ -9,7 +9,7 @@ Thank you for your interest in contributing. This document covers how to get set
 **Requirements:** Rust 1.75+ (install via [rustup](https://rustup.rs))
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/acdi
+git clone https://github.com/vral-parmar/acdi
 cd acdi
 cargo build
 cargo test
